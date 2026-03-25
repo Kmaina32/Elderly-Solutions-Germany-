@@ -1,0 +1,7 @@
+{
+  "name": "Elderly Care Solutions",
+  "description": "A comprehensive platform dedicated to improving the quality of life for seniors through social connection, healthcare tracking, and community support.",
+  "requestFramePermissions": [
+    "geolocation"
+  ]
+}

@@ -1,0 +1,278 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // ===============================================================
+    // Assumed Data Model
+    // ===============================================================
+    //
+    // Collection: users
+    // Document ID: {uid}
+    // Fields:
+    //   - uid: string (required)
+    //   - name: string (required, 1-100 chars)
+    //   - email: string (optional, email format)
+    //   - role: string (required, enum: elderly, caregiver, professional, admin)
+    //   - mobilityNeeds: string (optional, < 500 chars)
+    //   - healthAlerts: string (optional, < 500 chars)
+    //   - interests: list (optional, < 20 items)
+    //   - fontSize: string (optional, enum: sm, base, lg, xl, 2xl)
+    //   - createdAt: timestamp (required)
+    //
+    // Collection: care_circles
+    // Document ID: {circleId}
+    // Fields:
+    //   - elderlyId: string (required)
+    //   - caregiverIds: list (required, strings)
+    //   - professionalIds: list (required, strings)
+    //   - updatedAt: timestamp (required)
+    //
+    // Collection: health_logs
+    // Document ID: {logId}
+    // Fields:
+    //   - userId: string (required, elderly uid)
+    //   - type: string (required, enum: vitals, mood, activity, sleep)
+    //   - value: string (required, < 1000 chars)
+    //   - notes: string (optional, < 1000 chars)
+    //   - timestamp: timestamp (required)
+    //
+    // Collection: medications
+    // Document ID: {medId}
+    // Fields:
+    //   - userId: string (required, elderly uid)
+    //   - name: string (required, 1-100 chars)
+    //   - dosage: string (required, 1-100 chars)
+    //   - frequency: string (required, 1-100 chars)
+    //   - status: string (required, enum: active, discontinued)
+    //   - lastTaken: timestamp (optional)
+    //
+    // Collection: messages
+    // Document ID: {messageId}
+    // Fields:
+    //   - senderId: string (required)
+    //   - receiverId: string (required)
+    //   - content: string (required, 1-5000 chars)
+    //   - timestamp: timestamp (required)
+    //   - isRead: bool (required)
+    //
+    // Collection: services
+    // Document ID: {serviceId}
+    // Fields:
+    //   - title: string (required, 1-100 chars)
+    //   - description: string (required, 1-1000 chars)
+    //   - category: string (required, enum: transport, healthcare, home-help, other)
+    //   - price: number (required, >= 0)
+    //   - providerId: string (required, matches provider uid)
+    //   - verified: bool (required, admin only can set true)
+    //
+    // Collection: bookings
+    // Document ID: {bookingId}
+    // Fields:
+    //   - serviceId: string (required)
+    //   - userId: string (required, matches elderly uid)
+    //   - providerId: string (required)
+    //   - status: string (required, enum: pending, confirmed, completed, cancelled)
+    //   - scheduledAt: timestamp (required)
+    //   - createdAt: timestamp (required)
+    //
+    // Collection: events
+    // Document ID: {eventId}
+    // Fields:
+    //   - title: string (required, 1-100 chars)
+    //   - description: string (required, 1-1000 chars)
+    //   - location: string (required, 1-200 chars)
+    //   - startTime: timestamp (required)
+    //   - organizerId: string (required)
+    //   - attendees: list (optional, < 100 items)
+    //
+    // ===============================================================
+
+    // ===============================================================
+    // Helper Functions
+    // ===============================================================
+
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+
+    function isOwner(userId) {
+      return isAuthenticated() && request.auth.uid == userId;
+    }
+
+    function isAdmin() {
+      return isAuthenticated() &&
+        (get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'admin' ||
+          (request.auth.token.email == "macos8388@gmail.com" && request.auth.token.email_verified == true));
+    }
+
+    function isProfessional() {
+      return isAuthenticated() && get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'professional';
+    }
+
+    function isCaregiver() {
+      return isAuthenticated() && get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'caregiver';
+    }
+
+    function isElderly() {
+      return isAuthenticated() && get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'elderly';
+    }
+
+    function isInCareCircle(elderlyId) {
+      let circle = get(/databases/$(database)/documents/care_circles/$(elderlyId)).data;
+      return isAuthenticated() && (
+        request.auth.uid == elderlyId ||
+        request.auth.uid in circle.caregiverIds ||
+        request.auth.uid in circle.professionalIds ||
+        isAdmin()
+      );
+    }
+
+    function isValidEmail(email) {
+      return email is string && email.matches("^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$");
+    }
+
+    function hasOnlyAllowedFields(fields) {
+      return request.resource.data.keys().hasOnly(fields);
+    }
+
+    function hasRequiredFields(fields) {
+      return request.resource.data.keys().hasAll(fields);
+    }
+
+    // ===============================================================
+    // Domain Validators
+    // ===============================================================
+
+    function isValidUser(data) {
+      return hasRequiredFields(['uid', 'name', 'role']) &&
+             data.uid == request.auth.uid &&
+             data.name is string && data.name.size() > 0 && data.name.size() <= 100 &&
+             data.role in ['elderly', 'caregiver', 'professional', 'admin'] &&
+             (!('email' in data) || isValidEmail(data.email)) &&
+             (!('mobilityNeeds' in data) || (data.mobilityNeeds is string && data.mobilityNeeds.size() <= 500)) &&
+             (!('healthAlerts' in data) || (data.healthAlerts is string && data.healthAlerts.size() <= 500)) &&
+             (!('interests' in data) || (data.interests is list && data.interests.size() <= 20)) &&
+             (!('fontSize' in data) || (data.fontSize in ['sm', 'base', 'lg', 'xl', '2xl'])) &&
+             data.createdAt is timestamp;
+    }
+
+    function isValidCareCircle(data) {
+      return hasRequiredFields(['elderlyId', 'caregiverIds', 'professionalIds', 'updatedAt']) &&
+             data.elderlyId is string &&
+             data.caregiverIds is list &&
+             data.professionalIds is list &&
+             data.updatedAt is timestamp;
+    }
+
+    function isValidHealthLog(data) {
+      return hasRequiredFields(['userId', 'type', 'value', 'timestamp']) &&
+             data.userId is string &&
+             data.type in ['vitals', 'mood', 'activity', 'sleep'] &&
+             data.value is string && data.value.size() <= 1000 &&
+             (!('notes' in data) || (data.notes is string && data.notes.size() <= 1000)) &&
+             data.timestamp is timestamp;
+    }
+
+    function isValidMedication(data) {
+      return hasRequiredFields(['userId', 'name', 'dosage', 'frequency', 'status']) &&
+             data.userId is string &&
+             data.name is string && data.name.size() > 0 && data.name.size() <= 100 &&
+             data.dosage is string && data.dosage.size() > 0 && data.dosage.size() <= 100 &&
+             data.frequency is string && data.frequency.size() > 0 && data.frequency.size() <= 100 &&
+             data.status in ['active', 'discontinued'] &&
+             (!('lastTaken' in data) || data.lastTaken is timestamp) &&
+             (!('reminderTimes' in data) || (data.reminderTimes is list && data.reminderTimes.size() <= 10));
+    }
+
+    function isValidMessage(data) {
+      return hasRequiredFields(['senderId', 'receiverId', 'content', 'timestamp', 'isRead']) &&
+             data.senderId == request.auth.uid &&
+             data.receiverId is string &&
+             data.content is string && data.content.size() > 0 && data.content.size() <= 5000 &&
+             data.timestamp is timestamp &&
+             data.isRead is bool;
+    }
+
+    function isValidService(data) {
+      return hasRequiredFields(['title', 'description', 'category', 'price', 'providerId', 'verified']) &&
+             data.title is string && data.title.size() > 0 && data.title.size() <= 100 &&
+             data.description is string && data.description.size() > 0 && data.description.size() <= 1000 &&
+             data.category in ['transport', 'healthcare', 'home-help', 'other'] &&
+             data.price is number && data.price >= 0 &&
+             data.providerId is string &&
+             data.verified is bool;
+    }
+
+    function isValidBooking(data) {
+      return hasRequiredFields(['serviceId', 'userId', 'providerId', 'status', 'scheduledAt', 'createdAt']) &&
+             data.status in ['pending', 'confirmed', 'completed', 'cancelled'] &&
+             data.scheduledAt is timestamp &&
+             data.createdAt is timestamp;
+    }
+
+    function isValidEvent(data) {
+      return hasRequiredFields(['title', 'description', 'location', 'startTime', 'organizerId']) &&
+             data.title is string && data.title.size() > 0 && data.title.size() <= 100 &&
+             data.description is string && data.description.size() > 0 && data.description.size() <= 1000 &&
+             data.location is string && data.location.size() > 0 && data.location.size() <= 200 &&
+             data.startTime is timestamp &&
+             (!('attendees' in data) || (data.attendees is list && data.attendees.size() <= 100));
+    }
+
+    // ===============================================================
+    // Rules
+    // ===============================================================
+
+    match /users/{userId} {
+      allow read: if isAuthenticated();
+      allow create: if isOwner(userId) && isValidUser(request.resource.data) && (request.resource.data.role != 'admin' || isAdmin());
+      allow update: if isOwner(userId) && isValidUser(request.resource.data) && (request.resource.data.role == resource.data.role || isAdmin());
+    }
+
+    match /services/{serviceId} {
+      allow read: if isAuthenticated();
+      allow create: if isAuthenticated() && isValidService(request.resource.data) && (request.resource.data.verified == false || isAdmin());
+      allow update: if (isAdmin() || (isAuthenticated() && resource.data.providerId == request.auth.uid)) && isValidService(request.resource.data) && (request.resource.data.verified == resource.data.verified || isAdmin());
+      allow delete: if isAdmin() || (isAuthenticated() && resource.data.providerId == request.auth.uid);
+    }
+
+    match /bookings/{bookingId} {
+      allow read: if isAuthenticated() && (resource.data.userId == request.auth.uid || resource.data.providerId == request.auth.uid || isAdmin());
+      allow create: if isAuthenticated() && isValidBooking(request.resource.data) && request.resource.data.userId == request.auth.uid;
+      allow update: if isAuthenticated() && isValidBooking(request.resource.data) && (resource.data.userId == request.auth.uid || resource.data.providerId == request.auth.uid || isAdmin());
+    }
+
+    match /events/{eventId} {
+      allow read: if isAuthenticated();
+      allow create: if isAuthenticated() && isValidEvent(request.resource.data);
+      allow update: if isAuthenticated() && isValidEvent(request.resource.data);
+      allow delete: if isAdmin() || (isAuthenticated() && resource.data.organizerId == request.auth.uid);
+    }
+
+    match /care_circles/{elderlyId} {
+      allow read: if isInCareCircle(elderlyId);
+      allow create: if isAdmin() || isProfessional() || isCaregiver() || isElderly();
+      allow update: if isAdmin() || isProfessional() || isCaregiver();
+    }
+
+    match /health_logs/{logId} {
+      allow read: if isInCareCircle(resource.data.userId);
+      allow create: if isAuthenticated() && isValidHealthLog(request.resource.data) && (request.resource.data.userId == request.auth.uid || isCaregiver());
+      allow update: if isAdmin();
+      allow delete: if isAdmin();
+    }
+
+    match /medications/{medId} {
+      allow read: if isInCareCircle(resource.data.userId);
+      allow create: if isAuthenticated() && isValidMedication(request.resource.data) && (isProfessional() || isCaregiver());
+      allow update: if isAuthenticated() && isValidMedication(request.resource.data) && (isProfessional() || isCaregiver() || isOwner(resource.data.userId));
+      allow delete: if isAdmin() || isProfessional();
+    }
+
+    match /messages/{messageId} {
+      allow read: if isAuthenticated() && (resource.data.senderId == request.auth.uid || resource.data.receiverId == request.auth.uid);
+      allow create: if isAuthenticated() && isValidMessage(request.resource.data);
+      allow update: if isAuthenticated() && resource.data.receiverId == request.auth.uid && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['isRead']);
+    }
+  }
+}

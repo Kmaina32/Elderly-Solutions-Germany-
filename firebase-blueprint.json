@@ -1,0 +1,153 @@
+{
+  "entities": {
+    "User": {
+      "title": "User Profile",
+      "description": "Stores profile information for elderly users, caregivers, and service providers.",
+      "type": "object",
+      "properties": {
+        "uid": { "type": "string", "description": "Firebase Auth UID" },
+        "name": { "type": "string", "description": "Full name" },
+        "email": { "type": "string", "format": "email" },
+        "role": { "type": "string", "enum": ["elderly", "caregiver", "professional", "admin"] },
+        "mobilityNeeds": { "type": "string", "description": "Specific mobility assistance required" },
+        "healthAlerts": { "type": "string", "description": "Critical health information" },
+        "interests": { "type": "array", "items": { "type": "string" } },
+        "fontSize": { "type": "string", "enum": ["sm", "base", "lg", "xl", "2xl"], "description": "User preference for font size scaling" },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["uid", "name", "role"]
+    },
+    "CareCircle": {
+      "title": "Care Circle",
+      "description": "Links an elderly user to their caregivers and professionals.",
+      "type": "object",
+      "properties": {
+        "elderlyId": { "type": "string", "description": "UID of the elderly user" },
+        "caregiverIds": { "type": "array", "items": { "type": "string" }, "description": "List of caregiver UIDs" },
+        "professionalIds": { "type": "array", "items": { "type": "string" }, "description": "List of professional UIDs" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["elderlyId"]
+    },
+    "HealthLog": {
+      "title": "Health Log",
+      "description": "Daily health tracking for elderly users.",
+      "type": "object",
+      "properties": {
+        "userId": { "type": "string" },
+        "type": { "type": "string", "enum": ["vitals", "mood", "activity", "sleep"] },
+        "value": { "type": "string" },
+        "notes": { "type": "string" },
+        "timestamp": { "type": "string", "format": "date-time" }
+      },
+      "required": ["userId", "type", "value", "timestamp"]
+    },
+    "Medication": {
+      "title": "Medication",
+      "description": "Prescribed medications for elderly users.",
+      "type": "object",
+      "properties": {
+        "userId": { "type": "string" },
+        "name": { "type": "string" },
+        "dosage": { "type": "string" },
+        "frequency": { "type": "string" },
+        "status": { "type": "string", "enum": ["active", "discontinued"] },
+        "lastTaken": { "type": "string", "format": "date-time" },
+        "reminderTimes": { "type": "array", "items": { "type": "string" }, "description": "List of times (HH:mm) for reminders" }
+      },
+      "required": ["userId", "name", "dosage", "status"]
+    },
+    "Message": {
+      "title": "Secure Message",
+      "description": "Encrypted communication within a care circle.",
+      "type": "object",
+      "properties": {
+        "senderId": { "type": "string" },
+        "receiverId": { "type": "string" },
+        "content": { "type": "string" },
+        "timestamp": { "type": "string", "format": "date-time" },
+        "isRead": { "type": "boolean" }
+      },
+      "required": ["senderId", "receiverId", "content", "timestamp"]
+    },
+    "Service": {
+      "title": "Marketplace Service",
+      "description": "Represents a service available for booking (e.g., Transport, Home Help).",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "title": { "type": "string" },
+        "description": { "type": "string" },
+        "category": { "type": "string", "enum": ["transport", "healthcare", "home-help", "other"] },
+        "price": { "type": "number" },
+        "providerId": { "type": "string" },
+        "verified": { "type": "boolean" }
+      },
+      "required": ["title", "category", "providerId"]
+    },
+    "Booking": {
+      "title": "Service Booking",
+      "description": "A request for a service by an elderly user.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "serviceId": { "type": "string" },
+        "userId": { "type": "string" },
+        "providerId": { "type": "string" },
+        "status": { "type": "string", "enum": ["pending", "confirmed", "completed", "cancelled"] },
+        "scheduledAt": { "type": "string", "format": "date-time" },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["serviceId", "userId", "status"]
+    },
+    "Event": {
+      "title": "Community Event",
+      "description": "Local activities and gatherings for social connection.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "title": { "type": "string" },
+        "description": { "type": "string" },
+        "location": { "type": "string" },
+        "startTime": { "type": "string", "format": "date-time" },
+        "organizerId": { "type": "string" },
+        "attendees": { "type": "array", "items": { "type": "string" } }
+      },
+      "required": ["title", "startTime", "location"]
+    }
+  },
+  "firestore": {
+    "/users/{uid}": {
+      "schema": "User",
+      "description": "User profile documents"
+    },
+    "/services/{serviceId}": {
+      "schema": "Service",
+      "description": "Available services in the marketplace"
+    },
+    "/bookings/{bookingId}": {
+      "schema": "Booking",
+      "description": "Service booking records"
+    },
+    "/events/{eventId}": {
+      "schema": "Event",
+      "description": "Community event listings"
+    },
+    "/care_circles/{circleId}": {
+      "schema": "CareCircle",
+      "description": "Care circle management"
+    },
+    "/health_logs/{logId}": {
+      "schema": "HealthLog",
+      "description": "Daily health tracking records"
+    },
+    "/medications/{medId}": {
+      "schema": "Medication",
+      "description": "Patient medication records"
+    },
+    "/messages/{messageId}": {
+      "schema": "Message",
+      "description": "Secure communication records"
+    }
+  }
+}

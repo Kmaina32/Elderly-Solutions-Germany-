@@ -1,0 +1,51 @@
+import React from 'react';
+import { cn } from '../utils/cn';
+import { motion } from 'motion/react';
+
+interface CardProps extends React.HTMLAttributes<HTMLDivElement> {
+  title?: string;
+  description?: string;
+  icon?: React.ReactNode;
+  children?: React.ReactNode;
+  className?: string;
+  onClick?: () => void;
+  key?: React.Key;
+}
+
+export function Card({ className, title, description, icon, children, ...props }: CardProps) {
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 10 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true }}
+      className={cn(
+        'bg-white border border-stone-200 rounded-3xl p-8 lg:p-12 shadow-[0_4px_20px_rgba(0,0,0,0.03)] hover:shadow-[0_8px_30px_rgba(0,0,0,0.06)] transition-all duration-500 group',
+        className
+      )}
+      {...props}
+    >
+      <div className="flex flex-col lg:flex-row items-start gap-6 lg:gap-10 mb-8 lg:mb-12">
+        {icon && (
+          <div className="p-5 bg-linen-bg rounded-2xl text-slate-primary border border-stone-100 group-hover:scale-105 transition-transform duration-500 shadow-sm">
+            {icon}
+          </div>
+        )}
+        <div className="flex-1 space-y-3">
+          {title && (
+            <h3 className="text-2xl lg:text-3xl font-serif font-bold text-slate-primary leading-tight tracking-tight">
+              {title}
+            </h3>
+          )}
+          {description && (
+            <p className="text-base lg:text-lg text-stone-500 font-sans leading-relaxed max-w-2xl">
+              {description}
+            </p>
+          )}
+        </div>
+      </div>
+      <div className="font-sans">
+        {children}
+      </div>
+    </motion.div>
+  );
+}

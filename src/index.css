@@ -1,0 +1,24 @@
+@import url('https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400..700;1,400..700&family=Figtree:ital,wght@0,300..900;1,300..900&display=swap');
+@import "tailwindcss";
+
+@theme {
+  --font-serif: "Lora", serif;
+  --font-sans: "Figtree", sans-serif;
+  
+  --color-slate-primary: #2C3A47;
+  --color-sage-accent: #7A8D7A;
+  --color-linen-bg: #F5F2EE;
+  --color-charcoal: #1A1A1A;
+  --color-amber-alert: #D97706;
+  --color-terracotta: #B35D44;
+}
+
+@layer base {
+  body {
+    @apply bg-linen-bg text-charcoal font-sans text-[18px] leading-[1.7];
+  }
+  
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-serif font-medium tracking-tight;
+  }
+}
