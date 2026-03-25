@@ -81,81 +81,81 @@ export function Admin({ user }: { user: any }) {
 
   return (
     <Layout userRole={user?.role}>
-      <div className="space-y-24">
-        <header className="max-w-3xl">
-          <span className="text-sm font-sans font-bold uppercase tracking-[0.3em] text-sage-accent mb-6 block">
+      <div className="space-y-16">
+        <header className="max-w-2xl">
+          <span className="text-[10px] font-sans font-bold uppercase tracking-[0.3em] text-sage-accent mb-4 block">
             System Administration
           </span>
-          <h2 className="text-4xl font-serif font-bold text-slate-primary leading-tight mb-8">
+          <h2 className="text-3xl font-serif font-bold text-slate-primary leading-tight mb-4">
             Platform Oversight
           </h2>
-          <p className="text-xl text-stone-500 font-sans leading-relaxed">
+          <p className="text-lg text-stone-500 font-sans leading-relaxed">
             Manage user accounts, verify service providers, and maintain the integrity of the Elderly solutions network.
           </p>
         </header>
 
-        <div className="flex flex-col lg:flex-row gap-12">
+        <div className="flex flex-col lg:flex-row gap-8">
           {/* Sidebar Navigation */}
-          <aside className="lg:w-64 space-y-4">
+          <aside className="lg:w-56 space-y-3">
             <button
               onClick={() => setActiveTab('users')}
               className={cn(
-                'w-full flex items-center gap-4 px-6 py-4 rounded-xl font-sans font-bold text-lg transition-all',
+                'w-full flex items-center gap-3 px-5 py-3 rounded-xl font-sans font-bold text-base transition-all',
                 activeTab === 'users' ? 'bg-slate-primary text-white shadow-lg' : 'text-stone-400 hover:bg-stone-100'
               )}
             >
-              <Users size={24} />
+              <Users size={20} />
               <span>User Directory</span>
             </button>
             <button
               onClick={() => setActiveTab('services')}
               className={cn(
-                'w-full flex items-center gap-4 px-6 py-4 rounded-xl font-sans font-bold text-lg transition-all',
+                'w-full flex items-center gap-3 px-5 py-3 rounded-xl font-sans font-bold text-base transition-all',
                 activeTab === 'services' ? 'bg-slate-primary text-white shadow-lg' : 'text-stone-400 hover:bg-stone-100'
               )}
             >
-              <ShoppingBag size={24} />
+              <ShoppingBag size={20} />
               <span>Service Registry</span>
             </button>
             
-            <div className="pt-8 mt-8 border-t border-stone-200">
+            <div className="pt-6 mt-6 border-t border-stone-200">
               <Button 
                 variant="secondary" 
-                size="md" 
+                size="sm" 
                 onClick={seedData} 
                 disabled={isSeeding}
-                className="w-full flex items-center justify-center gap-3"
+                className="w-full flex items-center justify-center gap-2"
               >
-                <Database size={20} />
+                <Database size={16} />
                 <span>{isSeeding ? 'Seeding...' : 'Seed Initial Data'}</span>
               </Button>
             </div>
           </aside>
 
           {/* Main Content Area */}
-          <main className="flex-1 space-y-12">
+          <main className="flex-1 space-y-8">
             {activeTab === 'users' ? (
-              <div className="space-y-8">
+              <div className="space-y-6">
                 <div className="flex items-center justify-between">
-                  <h3 className="text-2xl font-serif font-bold text-slate-primary">User Directory</h3>
-                  <span className="text-stone-400 font-bold uppercase tracking-widest text-xs">{users.length} Total Users</span>
+                  <h3 className="text-xl font-serif font-bold text-slate-primary">User Directory</h3>
+                  <span className="text-stone-400 font-bold uppercase tracking-widest text-[10px]">{users.length} Total Users</span>
                 </div>
-                <div className="grid grid-cols-1 gap-6">
+                <div className="grid grid-cols-1 gap-4">
                   {users.map((u) => (
-                    <Card key={u.id} className="p-6">
-                      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-6">
-                        <div className="space-y-2">
-                          <h4 className="text-xl font-serif font-bold text-slate-primary">{u.name || 'Anonymous User'}</h4>
-                          <div className="flex items-center gap-4 text-stone-500 font-sans">
-                            <span className="px-3 py-1 bg-linen-bg border border-stone-200 rounded text-[10px] font-bold uppercase tracking-widest">
+                    <Card key={u.id} className="p-5">
+                      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                        <div className="space-y-1">
+                          <h4 className="text-lg font-serif font-bold text-slate-primary">{u.name || 'Anonymous User'}</h4>
+                          <div className="flex items-center gap-3 text-stone-500 font-sans">
+                            <span className="px-2 py-0.5 bg-linen-bg border border-stone-200 rounded text-[9px] font-bold uppercase tracking-widest">
                               {u.role}
                             </span>
-                            <span className="text-sm">{u.email}</span>
+                            <span className="text-xs">{u.email}</span>
                           </div>
                         </div>
-                        <div className="flex gap-4">
-                          <Button variant="secondary" size="md">Manage</Button>
-                          <Button variant="ghost" className="text-terracotta font-bold text-sm">Suspend</Button>
+                        <div className="flex gap-3">
+                          <Button variant="secondary" size="sm">Manage</Button>
+                          <Button variant="ghost" className="text-terracotta font-bold text-xs">Suspend</Button>
                         </div>
                       </div>
                     </Card>
@@ -163,31 +163,31 @@ export function Admin({ user }: { user: any }) {
                 </div>
               </div>
             ) : (
-              <div className="space-y-8">
+              <div className="space-y-6">
                 <div className="flex items-center justify-between">
-                  <h3 className="text-2xl font-serif font-bold text-slate-primary">Service Registry</h3>
-                  <span className="text-stone-400 font-bold uppercase tracking-widest text-xs">{services.length} Registered Services</span>
+                  <h3 className="text-xl font-serif font-bold text-slate-primary">Service Registry</h3>
+                  <span className="text-stone-400 font-bold uppercase tracking-widest text-[10px]">{services.length} Registered Services</span>
                 </div>
-                <div className="grid grid-cols-1 gap-6">
+                <div className="grid grid-cols-1 gap-4">
                   {services.map((s) => (
-                    <Card key={s.id} className="p-6">
-                      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-6">
-                        <div className="space-y-2">
-                          <div className="flex items-center gap-3">
-                            <h4 className="text-xl font-serif font-bold text-slate-primary">{s.title}</h4>
-                            {s.verified && <CheckCircle size={16} className="text-sage-accent" />}
+                    <Card key={s.id} className="p-5">
+                      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                        <div className="space-y-1">
+                          <div className="flex items-center gap-2">
+                            <h4 className="text-lg font-serif font-bold text-slate-primary">{s.title}</h4>
+                            {s.verified && <CheckCircle size={14} className="text-sage-accent" />}
                           </div>
-                          <p className="text-base text-stone-500 font-sans">{s.description}</p>
-                          <div className="flex items-center gap-4 text-xs font-bold uppercase tracking-widest text-stone-400">
+                          <p className="text-sm text-stone-500 font-sans">{s.description}</p>
+                          <div className="flex items-center gap-3 text-[10px] font-bold uppercase tracking-widest text-stone-400">
                             <span>{s.category}</span>
                             <span>•</span>
                             <span>${s.price} / Session</span>
                           </div>
                         </div>
-                        <div className="flex gap-4">
+                        <div className="flex gap-3">
                           <Button 
                             variant={s.verified ? 'secondary' : 'accent'} 
-                            size="md"
+                            size="sm"
                             onClick={() => toggleVerification(s)}
                           >
                             {s.verified ? 'Revoke' : 'Verify'}
@@ -195,9 +195,9 @@ export function Admin({ user }: { user: any }) {
                           <Button 
                             variant="ghost" 
                             onClick={() => deleteService(s.id)}
-                            className="text-terracotta p-2"
+                            className="text-terracotta p-1.5"
                           >
-                            <Trash2 size={20} />
+                            <Trash2 size={18} />
                           </Button>
                         </div>
                       </div>

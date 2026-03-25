@@ -8,6 +8,7 @@ Elderly Care Solutions is a comprehensive, accessibility-first platform designed
 - **Elderly-Centric Model:** Connects seniors with a dedicated circle of caregivers and professionals.
 - **Role-Based Access:** Tailored interfaces for Elderly Users, Caregivers, Professionals, and Administrators.
 - **Secure Linking:** Caregivers can join a circle using a unique Elderly ID or email.
+- **Manual Authentication:** Support for traditional email/password sign-up and sign-in alongside Google OAuth.
 
 ### 2. Health & Medication Management
 - **Medication Tracker:** Real-time logging of prescriptions, dosages, and frequencies.

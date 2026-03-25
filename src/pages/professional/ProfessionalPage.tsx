@@ -56,48 +56,48 @@ export function ProfessionalHome({ user }: { user: any }) {
       <motion.div
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
-        className="space-y-24"
+        className="space-y-16"
       >
         {/* Welcome Section */}
-        <section className="max-w-3xl">
-          <span className="text-sm font-sans font-bold uppercase tracking-[0.3em] text-emerald-600 mb-6 block">
+        <section className="max-w-2xl">
+          <span className="text-[10px] font-sans font-bold uppercase tracking-[0.3em] text-emerald-600 mb-4 block">
             Professional Dashboard
           </span>
-          <h2 className="text-4xl lg:text-5xl font-serif font-bold text-slate-primary leading-[1.1] mb-8">
+          <h2 className="text-3xl lg:text-4xl font-serif font-bold text-slate-primary leading-[1.1] mb-6">
             Welcome, Dr. {user?.name?.split(' ')[0] || 'Professional'}.
           </h2>
-          <p className="text-xl text-stone-500 font-sans leading-relaxed">
+          <p className="text-lg text-stone-500 font-sans leading-relaxed">
             You have <span className="text-slate-primary font-bold">{patients.length} patients</span> under your care today. Here is your clinical overview.
           </p>
         </section>
 
         {/* Patient Selector */}
-        <section className="space-y-6">
+        <section className="space-y-4">
           <div className="flex items-center justify-between">
-            <h3 className="text-2xl font-serif font-bold text-slate-primary">Active Patients</h3>
-            <Button variant="ghost" size="sm" className="text-stone-400">View All</Button>
+            <h3 className="text-xl font-serif font-bold text-slate-primary">Active Patients</h3>
+            <Button variant="ghost" size="sm" className="text-stone-400 text-xs">View All</Button>
           </div>
-          <div className="flex gap-4 overflow-x-auto pb-4 scrollbar-hide">
+          <div className="flex gap-3 overflow-x-auto pb-3 scrollbar-hide">
             {patients.map((p) => (
               <button
                 key={p.id}
                 onClick={() => handlePatientSelect(p)}
                 className={cn(
-                  "flex-shrink-0 flex items-center gap-4 p-4 rounded-2xl border-2 transition-all",
+                  "flex-shrink-0 flex items-center gap-3 p-3 rounded-xl border-2 transition-all",
                   selectedPatientId === p.id ? "border-emerald-600 bg-emerald-50/50 shadow-sm" : "border-stone-100 hover:border-stone-200"
                 )}
               >
-                <div className="w-12 h-12 rounded-full bg-stone-100 flex items-center justify-center text-stone-400">
-                  <Users size={20} />
+                <div className="w-10 h-10 rounded-full bg-stone-100 flex items-center justify-center text-stone-400">
+                  <Users size={18} />
                 </div>
                 <div className="text-left">
-                  <p className="font-serif text-lg text-slate-primary">{p.name}</p>
-                  <p className="text-xs text-stone-400 font-bold uppercase tracking-widest">{p.role}</p>
+                  <p className="font-serif text-base text-slate-primary">{p.name}</p>
+                  <p className="text-[9px] text-stone-400 font-bold uppercase tracking-widest">{p.role}</p>
                 </div>
               </button>
             ))}
             {patients.length === 0 && (
-              <div className="w-full p-8 text-center text-stone-400 italic bg-stone-50 rounded-2xl border-2 border-dashed border-stone-200">
+              <div className="w-full p-6 text-center text-stone-400 italic bg-stone-50 rounded-xl border-2 border-dashed border-stone-200 text-sm">
                 No patients linked to your profile yet.
               </div>
             )}
@@ -105,32 +105,32 @@ export function ProfessionalHome({ user }: { user: any }) {
         </section>
 
         {selectedPatient && (
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-12">
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
             <div className="lg:col-span-2 space-y-12">
               <section>
-                <div className="flex items-center justify-between mb-8">
+                <div className="flex items-center justify-between mb-6">
                   <div>
-                    <h3 className="text-3xl font-serif font-bold text-slate-primary">Clinical Logs</h3>
-                    <p className="text-stone-500 mt-1">Reviewing logs for {selectedPatient.name}.</p>
+                    <h3 className="text-2xl font-serif font-bold text-slate-primary">Clinical Logs</h3>
+                    <p className="text-sm text-stone-500 mt-1">Reviewing logs for {selectedPatient.name}.</p>
                   </div>
-                  <div className="hidden sm:flex items-center gap-2 text-emerald-600 font-bold uppercase tracking-widest text-[10px] border border-emerald-200 px-3 py-1 rounded-full">
-                    <Activity size={12} />
+                  <div className="hidden sm:flex items-center gap-2 text-emerald-600 font-bold uppercase tracking-widest text-[9px] border border-emerald-200 px-2 py-0.5 rounded-full">
+                    <Activity size={10} />
                     <span>Clinical Review</span>
                   </div>
                 </div>
-                <Card className="p-8">
+                <Card className="p-6">
                   <HealthLogger elderlyId={selectedPatientId || ''} />
                 </Card>
               </section>
 
               <section>
-                <div className="flex items-center justify-between mb-8">
+                <div className="flex items-center justify-between mb-6">
                   <div>
-                    <h3 className="text-3xl font-serif font-bold text-slate-primary">Medication Regimen</h3>
-                    <p className="text-stone-500 mt-1">Active prescriptions and adherence history.</p>
+                    <h3 className="text-2xl font-serif font-bold text-slate-primary">Medication Regimen</h3>
+                    <p className="text-sm text-stone-500 mt-1">Active prescriptions and adherence history.</p>
                   </div>
-                  <div className="hidden sm:flex items-center gap-2 text-terracotta font-bold uppercase tracking-widest text-[10px] border border-terracotta/20 px-3 py-1 rounded-full">
-                    <Pill size={12} />
+                  <div className="hidden sm:flex items-center gap-2 text-terracotta font-bold uppercase tracking-widest text-[9px] border border-terracotta/20 px-2 py-0.5 rounded-full">
+                    <Pill size={10} />
                     <span>Next dose in 2h</span>
                   </div>
                 </div>
@@ -140,31 +140,31 @@ export function ProfessionalHome({ user }: { user: any }) {
 
             <div className="space-y-12">
               <section>
-                <div className="flex items-center justify-between mb-8">
-                  <h3 className="text-3xl font-serif font-bold text-slate-primary">Care Circle</h3>
-                  <div className="hidden sm:flex items-center gap-2 text-blue-600 font-bold uppercase tracking-widest text-[10px] border border-blue-200 px-3 py-1 rounded-full">
-                    <Users size={12} />
+                <div className="flex items-center justify-between mb-6">
+                  <h3 className="text-2xl font-serif font-bold text-slate-primary">Care Circle</h3>
+                  <div className="hidden sm:flex items-center gap-2 text-blue-600 font-bold uppercase tracking-widest text-[9px] border border-blue-200 px-2 py-0.5 rounded-full">
+                    <Users size={10} />
                     <span>Team Overview</span>
                   </div>
                 </div>
                 <CareCircleMembers elderlyId={selectedPatientId || ''} />
               </section>
 
-              <section className="space-y-6">
-                <h3 className="text-3xl font-serif font-bold text-slate-primary">Clinical Tools</h3>
-                <div className="grid grid-cols-1 gap-4">
+              <section className="space-y-4">
+                <h3 className="text-2xl font-serif font-bold text-slate-primary">Clinical Tools</h3>
+                <div className="grid grid-cols-1 gap-3">
                   <Card 
                     title="Consultations" 
                     description="Schedule a virtual visit."
-                    icon={<Calendar size={24} />}
-                    className="p-6 hover:border-emerald-600 cursor-pointer"
+                    icon={<Calendar size={20} />}
+                    className="p-5 hover:border-emerald-600 cursor-pointer"
                     onClick={() => navigate('/services')}
                   />
                   <Card 
                     title="Secure Messaging" 
                     description="Chat with caregivers."
-                    icon={<MessageSquare size={24} />}
-                    className="p-6 hover:border-emerald-600 cursor-pointer"
+                    icon={<MessageSquare size={20} />}
+                    className="p-5 hover:border-emerald-600 cursor-pointer"
                     onClick={() => navigate('/social')}
                   />
                 </div>

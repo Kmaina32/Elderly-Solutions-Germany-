@@ -81,66 +81,66 @@ export function Layout({ children, userRole }: LayoutProps) {
   return (
     <div className="min-h-screen bg-linen-bg text-charcoal font-sans flex flex-col lg:flex-row selection:bg-sage-accent/20">
       {/* Desktop Sidebar */}
-      <aside className="hidden lg:flex flex-col w-72 bg-white border-r border-stone-200 sticky top-0 h-screen z-50">
-        <div className="p-8 border-b border-stone-100">
+      <aside className="hidden lg:flex flex-col w-64 bg-white border-r border-stone-200 sticky top-0 h-screen z-50">
+        <div className="p-6 border-b border-stone-100">
           <BrandName />
         </div>
         
-        <nav className="flex-1 px-4 py-8 space-y-2 overflow-y-auto">
-          <p className="px-4 text-[10px] font-bold uppercase tracking-[0.2em] text-stone-400 mb-4">Main Navigation</p>
+        <nav className="flex-1 px-3 py-6 space-y-1 overflow-y-auto">
+          <p className="px-3 text-[9px] font-bold uppercase tracking-[0.2em] text-stone-400 mb-3">Main Navigation</p>
           {bottomNavItems.map((item) => (
             <Link
               key={item.path}
               to={item.path}
               className={cn(
-                "flex items-center gap-4 px-4 py-3 rounded-xl transition-all group",
+                "flex items-center gap-3 px-3 py-2.5 rounded-xl transition-all group",
                 location.pathname === item.path 
                   ? "bg-slate-primary text-white shadow-lg shadow-slate-primary/20" 
                   : "text-stone-500 hover:bg-stone-50 hover:text-slate-primary"
               )}
             >
-              <item.icon size={20} className={cn("transition-transform group-hover:scale-110", location.pathname === item.path ? "text-white" : "text-stone-400")} />
-              <span className="text-sm font-bold uppercase tracking-wider">{item.label}</span>
+              <item.icon size={18} className={cn("transition-transform group-hover:scale-110", location.pathname === item.path ? "text-white" : "text-stone-400")} />
+              <span className="text-xs font-bold uppercase tracking-wider">{item.label}</span>
             </Link>
           ))}
 
-          <div className="my-8 pt-8 border-t border-stone-100">
-            <p className="px-4 text-[10px] font-bold uppercase tracking-[0.2em] text-stone-400 mb-4">More Options</p>
+          <div className="my-6 pt-6 border-t border-stone-100">
+            <p className="px-3 text-[9px] font-bold uppercase tracking-[0.2em] text-stone-400 mb-3">More Options</p>
             {menuItems.map((item) => (
               <Link
                 key={item.path}
                 to={item.path}
                 className={cn(
-                  "flex items-center gap-4 px-4 py-3 rounded-xl transition-all group",
+                  "flex items-center gap-3 px-3 py-2.5 rounded-xl transition-all group",
                   location.pathname === item.path 
                     ? "bg-slate-primary text-white shadow-lg shadow-slate-primary/20" 
                     : "text-stone-500 hover:bg-stone-50 hover:text-slate-primary"
                 )}
               >
-                <item.icon size={20} className={cn("transition-transform group-hover:scale-110", location.pathname === item.path ? "text-white" : "text-stone-400")} />
+                <item.icon size={18} className={cn("transition-transform group-hover:scale-110", location.pathname === item.path ? "text-white" : "text-stone-400")} />
                 <div className="flex flex-col">
-                  <span className="text-sm font-bold uppercase tracking-wider">{item.label}</span>
-                  <span className="text-[9px] opacity-60 uppercase tracking-tighter">{item.desc}</span>
+                  <span className="text-xs font-bold uppercase tracking-wider">{item.label}</span>
+                  <span className="text-[8px] opacity-60 uppercase tracking-tighter">{item.desc}</span>
                 </div>
               </Link>
             ))}
           </div>
         </nav>
 
-        <div className="p-6 border-t border-stone-100 space-y-4">
+        <div className="p-5 border-t border-stone-100 space-y-3">
           <button 
             onClick={() => setIsAccessibilityOpen(true)}
-            className="w-full flex items-center gap-4 px-4 py-3 rounded-xl text-stone-500 hover:bg-stone-50 hover:text-slate-primary transition-all"
+            className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-stone-500 hover:bg-stone-50 hover:text-slate-primary transition-all"
           >
-            <Type size={20} />
-            <span className="text-sm font-bold uppercase tracking-wider">Settings</span>
+            <Type size={18} />
+            <span className="text-xs font-bold uppercase tracking-wider">Settings</span>
           </button>
           <button 
             onClick={handleLogout}
-            className="w-full flex items-center gap-4 px-4 py-3 rounded-xl text-terracotta hover:bg-terracotta/5 transition-all"
+            className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-terracotta hover:bg-terracotta/5 transition-all"
           >
-            <LogOut size={20} />
-            <span className="text-sm font-bold uppercase tracking-wider">Logout</span>
+            <LogOut size={18} />
+            <span className="text-xs font-bold uppercase tracking-wider">Logout</span>
           </button>
         </div>
       </aside>
@@ -156,31 +156,31 @@ export function Layout({ children, userRole }: LayoutProps) {
         />
 
         {/* Editorial Header (Mobile Only) */}
-        <header className="lg:hidden bg-white border-b border-stone-200 px-8 py-6 sticky top-0 z-50 shadow-sm">
-          <div className="max-w-7xl mx-auto flex items-center justify-between relative">
+        <header className="lg:hidden bg-white border-b border-stone-200 px-6 py-4 sticky top-0 z-50 shadow-sm">
+          <div className="max-w-5xl mx-auto flex items-center justify-between relative">
             <BrandName isMobile />
             
             <button 
               onClick={() => setIsMenuOpen(!isMenuOpen)}
-              className="p-3 text-slate-primary hover:bg-stone-100 rounded-lg transition-colors"
+              className="p-2 text-slate-primary hover:bg-stone-100 rounded-lg transition-colors"
               aria-label="Toggle Menu"
             >
-              {isMenuOpen ? <X size={32} /> : <Menu size={32} />}
+              {isMenuOpen ? <X size={28} /> : <Menu size={28} />}
             </button>
           </div>
         </header>
 
         {/* Desktop Header (Simplified, only for Care Ecosystem) */}
-        <header className="hidden lg:block bg-white/80 backdrop-blur-md border-b border-stone-100 px-12 py-4 sticky top-0 z-40">
-          <div className="flex items-center justify-between">
+        <header className="hidden lg:block bg-white/80 backdrop-blur-md border-b border-stone-100 px-8 py-3 sticky top-0 z-40">
+          <div className="flex items-center justify-between max-w-5xl mx-auto">
             <button
               onClick={() => setIsSolutionsOpen(!isSolutionsOpen)}
               className={cn(
-                'text-[10px] font-bold uppercase tracking-[0.2em] transition-all hover:text-sage-accent py-2 flex items-center gap-2',
+                'text-[9px] font-bold uppercase tracking-[0.2em] transition-all hover:text-sage-accent py-1.5 flex items-center gap-2',
                 isSolutionsOpen ? 'text-slate-primary' : 'text-stone-400'
               )}
             >
-              Care Ecosystem <ChevronDown size={12} className={cn("transition-transform", isSolutionsOpen && "rotate-180")} />
+              Care Ecosystem <ChevronDown size={10} className={cn("transition-transform", isSolutionsOpen && "rotate-180")} />
             </button>
             
             <AnimatePresence>
@@ -197,20 +197,20 @@ export function Layout({ children, userRole }: LayoutProps) {
                     initial={{ opacity: 0, y: 10, scale: 0.98 }}
                     animate={{ opacity: 1, y: 0, scale: 1 }}
                     exit={{ opacity: 0, y: 10, scale: 0.98 }}
-                    className="absolute top-full left-12 mt-4 w-[480px] bg-white rounded-3xl shadow-[0_20px_50px_rgba(0,0,0,0.1)] border border-stone-100 p-6 z-50 overflow-hidden"
+                    className="absolute top-full left-0 mt-2 w-[400px] bg-white rounded-2xl shadow-[0_15px_40px_rgba(0,0,0,0.1)] border border-stone-100 p-5 z-50 overflow-hidden"
                   >
-                    <div className="space-y-6">
+                    <div className="space-y-5">
                       <div className="flex items-center justify-between">
                         <div className="space-y-0.5">
-                          <h3 className="text-base font-serif font-bold text-slate-primary">Care Ecosystem</h3>
-                          <p className="text-[10px] font-sans font-bold uppercase tracking-widest text-stone-400">Integrated Solutions</p>
+                          <h3 className="text-sm font-serif font-bold text-slate-primary">Care Ecosystem</h3>
+                          <p className="text-[9px] font-sans font-bold uppercase tracking-widest text-stone-400">Integrated Solutions</p>
                         </div>
-                        <button onClick={() => setIsSolutionsOpen(false)} className="w-8 h-8 flex items-center justify-center rounded-full bg-stone-50 text-stone-400 hover:text-slate-primary transition-colors">
-                          <X size={16} />
+                        <button onClick={() => setIsSolutionsOpen(false)} className="w-7 h-7 flex items-center justify-center rounded-full bg-stone-50 text-stone-400 hover:text-slate-primary transition-colors">
+                          <X size={14} />
                         </button>
                       </div>
                       
-                      <div className="grid grid-cols-2 gap-3">
+                      <div className="grid grid-cols-2 gap-2">
                         {[
                           { label: 'Health Monitoring', desc: 'Vital signs & alerts', icon: Activity, color: 'text-emerald-600', bg: 'bg-emerald-50' },
                           { label: 'Social Events', desc: 'Community gatherings', icon: Calendar, color: 'text-blue-600', bg: 'bg-blue-50' },
@@ -221,14 +221,14 @@ export function Layout({ children, userRole }: LayoutProps) {
                         ].map((sol) => (
                           <button
                             key={sol.label}
-                            className="flex items-start gap-3 p-3 rounded-2xl border border-transparent hover:border-stone-100 hover:bg-stone-50 transition-all group text-left"
+                            className="flex items-start gap-2.5 p-2.5 rounded-xl border border-transparent hover:border-stone-100 hover:bg-stone-50 transition-all group text-left"
                           >
-                            <div className={cn("w-10 h-10 shrink-0 rounded-xl flex items-center justify-center transition-transform group-hover:scale-105 shadow-sm", sol.bg, sol.color)}>
-                              <sol.icon size={20} />
+                            <div className={cn("w-8 h-8 shrink-0 rounded-lg flex items-center justify-center transition-transform group-hover:scale-105 shadow-sm", sol.bg, sol.color)}>
+                              <sol.icon size={16} />
                             </div>
                             <div className="space-y-0.5">
-                              <span className="text-xs font-bold text-slate-primary block">{sol.label}</span>
-                              <span className="text-[9px] text-stone-400 font-medium uppercase tracking-wider">{sol.desc}</span>
+                              <span className="text-[11px] font-bold text-slate-primary block leading-tight">{sol.label}</span>
+                              <span className="text-[8px] text-stone-400 font-medium uppercase tracking-wider">{sol.desc}</span>
                             </div>
                           </button>
                         ))}
@@ -359,7 +359,7 @@ export function Layout({ children, userRole }: LayoutProps) {
       </AnimatePresence>
 
       {/* Main Content Area */}
-      <main className="flex-1 w-full px-8 pt-16 pb-32 lg:pb-16 overflow-x-hidden">
+      <main className="flex-1 w-full px-6 pt-10 pb-28 lg:pb-12 overflow-x-hidden">
         <AnimatePresence mode="wait">
           <motion.div
             key={location.pathname}
@@ -367,7 +367,7 @@ export function Layout({ children, userRole }: LayoutProps) {
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -10 }}
             transition={{ duration: 0.4, ease: "easeOut" }}
-            className="max-w-7xl mx-auto"
+            className="max-w-5xl mx-auto"
           >
             {children}
           </motion.div>
@@ -375,33 +375,33 @@ export function Layout({ children, userRole }: LayoutProps) {
       </main>
 
       {/* Persistent Bottom Navigation Bar (Mobile Only) */}
-      <div className="fixed bottom-0 left-0 right-0 z-50 bg-white/80 backdrop-blur-xl border-t border-stone-200 px-6 py-3 lg:hidden">
-        <div className="max-w-3xl mx-auto flex items-center justify-between gap-2">
+      <div className="fixed bottom-0 left-0 right-0 z-50 bg-white/90 backdrop-blur-xl border-t border-stone-200 px-4 py-2 lg:hidden">
+        <div className="max-w-lg mx-auto flex items-center justify-between gap-1">
           {bottomNavItems.map((item) => (
             <Link
               key={item.path}
               to={item.path}
               className={cn(
-                "flex flex-col items-center gap-1 px-4 py-2 rounded-2xl transition-all active:scale-90",
+                "flex flex-col items-center gap-1 px-3 py-1.5 rounded-xl transition-all active:scale-90",
                 location.pathname === item.path 
                   ? "text-slate-primary bg-stone-100" 
                   : "text-stone-400 hover:text-slate-primary"
               )}
             >
-              <item.icon size={22} strokeWidth={location.pathname === item.path ? 2.5 : 2} />
-              <span className="text-[10px] font-bold uppercase tracking-wider">{item.label}</span>
+              <item.icon size={20} strokeWidth={location.pathname === item.path ? 2.5 : 2} />
+              <span className="text-[9px] font-bold uppercase tracking-wider">{item.label}</span>
             </Link>
           ))}
           
           <button
             onClick={() => setIsMenuOpen(!isMenuOpen)}
             className={cn(
-              "flex flex-col items-center gap-1 px-4 py-2 rounded-2xl transition-all active:scale-90",
+              "flex flex-col items-center gap-1 px-3 py-1.5 rounded-xl transition-all active:scale-90",
               isMenuOpen ? "text-slate-primary bg-stone-100" : "text-stone-400 hover:text-slate-primary"
             )}
           >
-            <LayoutGrid size={22} strokeWidth={isMenuOpen ? 2.5 : 2} />
-            <span className="text-[10px] font-bold uppercase tracking-wider">Menu</span>
+            <LayoutGrid size={20} strokeWidth={isMenuOpen ? 2.5 : 2} />
+            <span className="text-[9px] font-bold uppercase tracking-wider">Menu</span>
           </button>
         </div>
       </div>
@@ -416,36 +416,36 @@ export function Layout({ children, userRole }: LayoutProps) {
       </button>
 
       {/* Editorial Footer */}
-      <footer className="hidden lg:block bg-slate-primary text-linen-bg/60 py-20 px-12 border-t border-stone-200 ml-0">
-        <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-16">
-          <div className="space-y-6">
+      <footer className="hidden lg:block bg-slate-primary text-linen-bg/60 py-16 px-8 border-t border-stone-200 ml-0">
+        <div className="max-w-5xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-12">
+          <div className="space-y-4">
             <div className="flex flex-col">
-              <span className="text-lg font-serif font-bold tracking-tight text-linen-bg">
+              <span className="text-base font-serif font-bold tracking-tight text-linen-bg">
                 Elderly solutions
               </span>
-              <span className="text-xs font-sans font-bold uppercase tracking-[0.3em] text-linen-bg/40 mt-1">
+              <span className="text-[10px] font-sans font-bold uppercase tracking-[0.3em] text-linen-bg/40 mt-1">
                 Dignified Care
               </span>
             </div>
-            <p className="text-base leading-relaxed max-w-xs">
+            <p className="text-sm leading-relaxed max-w-xs">
               Dedicated to providing dignified, professional care and fostering meaningful connections for our elderly community.
             </p>
           </div>
-          <div className="space-y-6">
-            <h4 className="text-linen-bg font-serif text-lg font-bold">Resources</h4>
-            <nav className="flex flex-col gap-4">
-              <a href="#" className="hover:text-linen-bg transition-colors text-sm">Privacy Policy</a>
-              <a href="#" className="hover:text-linen-bg transition-colors text-sm">Terms of Service</a>
-              <a href="#" className="hover:text-linen-bg transition-colors text-sm">Accessibility Statement</a>
+          <div className="space-y-4">
+            <h4 className="text-linen-bg font-serif text-base font-bold">Resources</h4>
+            <nav className="flex flex-col gap-3">
+              <a href="#" className="hover:text-linen-bg transition-colors text-xs">Privacy Policy</a>
+              <a href="#" className="hover:text-linen-bg transition-colors text-xs">Terms of Service</a>
+              <a href="#" className="hover:text-linen-bg transition-colors text-xs">Accessibility Statement</a>
             </nav>
           </div>
-          <div className="space-y-6">
-            <h4 className="text-linen-bg font-serif text-lg font-bold">Contact</h4>
-            <p className="text-base">support@elderlysolutions.com</p>
-            <p className="text-base">1-800-ELDERLY</p>
+          <div className="space-y-4">
+            <h4 className="text-linen-bg font-serif text-base font-bold">Contact</h4>
+            <p className="text-sm">support@elderlysolutions.com</p>
+            <p className="text-sm">1-800-ELDERLY</p>
           </div>
         </div>
-        <div className="max-w-7xl mx-auto mt-20 pt-10 border-t border-linen-bg/10 text-center text-xs uppercase tracking-[0.2em] text-linen-bg/30">
+        <div className="max-w-5xl mx-auto mt-16 pt-8 border-t border-linen-bg/10 text-center text-[10px] uppercase tracking-[0.2em] text-linen-bg/30">
           © 2026 Elderly solutions Healthcare Technology Studio
         </div>
       </footer>
