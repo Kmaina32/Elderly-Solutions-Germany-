@@ -31,18 +31,20 @@ Elderly Care Solutions is a comprehensive, accessibility-first platform designed
 
 ### 6. Accessibility First
 - **Dynamic Scaling:** User-controlled font sizes (sm to 2xl) via `AccessibilityContext`.
-- **High Contrast:** Designed for legibility and ease of use for those with visual impairments.
+- **High Contrast:** Designed for legibility with a modern Slate & Stone palette.
 - **Simplified Navigation:** Large touch targets and intuitive layouts.
+- **Modern UI:** Immersive split-screen authentication with glassmorphism effects.
 
 ## 🛠 Tech Stack
 
-- **Frontend:** React 18, TypeScript, Vite
-- **Styling:** Tailwind CSS (Mobile-first, responsive)
+- **Frontend:** React 19, TypeScript, Vite 6
+- **Styling:** Tailwind CSS v4 (Mobile-first, responsive)
 - **Animations:** Framer Motion (`motion/react`)
 - **Icons:** Lucide React
-- **Backend:** Firebase (Auth, Firestore)
+- **Backend:** Firebase v12 (Auth, Firestore)
 - **AI Integration:** Google Gemini AI (`@google/genai`)
 - **Server:** Express (Node.js) for full-stack capabilities
+- **Utilities:** `clsx`, `tailwind-merge` for dynamic styling
 
 ## 🚀 Getting Started
 
@@ -87,6 +89,10 @@ The platform implements a "Default Deny" security model via Firestore Security R
 ## 📁 Project Structure
 
 - `/src/pages`: Core views (Home, Social, Services, Knowledge Hub, Empathy Lab).
+  - `/admin`: Admin dashboard and management.
+  - `/caregiver`: Caregiver-specific home and tools.
+  - `/professional`: Clinical dashboard for medical professionals.
+  - `/elderly`: Personalized home for elderly users.
 - `/src/components`: Feature-specific UI (MedicationTracker, HealthLogger, CareCircleMembers).
 - `/src/contexts`: Global state management (Accessibility, Auth).
 - `/firestore.rules`: Authoritative security definitions.

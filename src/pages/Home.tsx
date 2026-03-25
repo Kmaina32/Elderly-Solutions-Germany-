@@ -1,8 +1,8 @@
 import React from 'react';
-import { ElderlyHome } from './ElderlyHome';
-import { CaregiverHome } from './CaregiverHome';
-import { ProfessionalHome } from './ProfessionalHome';
-import { Admin } from './Admin';
+import { ElderlyHome } from './elderly/ElderlyPage';
+import { CaregiverHome } from './caregiver/CaregiverPage';
+import { ProfessionalHome } from './professional/ProfessionalPage';
+import { Admin } from './admin/AdminPage';
 
 export function Home({ user }: { user: any }) {
   const role = user?.role;

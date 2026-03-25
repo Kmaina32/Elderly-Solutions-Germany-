@@ -2,9 +2,10 @@ import React, { useState } from 'react';
 import { Layout } from '../components/Layout';
 import { Card } from '../components/Card';
 import { Button } from '../components/Button';
-import { Heart, Send, ShieldAlert, Info, Brain, MessageSquare, Sparkles, Bot, User, Stethoscope, Calendar, ArrowRight, UserCheck } from 'lucide-react';
+import { Heart, Send, ShieldAlert, Info, Brain, MessageSquare, Sparkles, Bot, User, Stethoscope, Calendar, ArrowRight, UserCheck, X } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 import { cn } from '../utils/cn';
+import { GoogleGenAI, Type } from "@google/genai";
 
 interface AnalysisResult {
   label: string;
@@ -19,6 +20,7 @@ export function EmpathyLab({ user }: { user: any }) {
   const [result, setResult] = useState<AnalysisResult | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [showBooking, setShowBooking] = useState(false);
+  const [showBookingConfirmation, setShowBookingConfirmation] = useState(false);
 
   const handleAnalyze = async () => {
     if (!seekerPost || !responsePost) return;
@@ -28,33 +30,44 @@ export function EmpathyLab({ user }: { user: any }) {
     setResult(null);
 
     try {
-      await new Promise(resolve => setTimeout(resolve, 2000));
+      const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY! });
+      const response = await ai.models.generateContent({
+        model: "gemini-3-flash-preview",
+        contents: `Analyze the following conversation for empathy.
+        Seeker: "${seekerPost}"
+        Response: "${responsePost}"
+        
+        Provide a JSON response with:
+        - label: "Low Empathy", "Medium Empathy", or "High Empathy"
+        - score: a number between 0 and 1 representing the empathy level
+        - advice: a short, supportive advice on how to improve the response or why it's good.`,
+        config: {
+          responseMimeType: "application/json",
+          responseSchema: {
+            type: Type.OBJECT,
+            properties: {
+              label: { type: Type.STRING },
+              score: { type: Type.NUMBER },
+              advice: { type: Type.STRING },
+            },
+            required: ["label", "score", "advice"],
+          },
+        },
+      });
 
-      const mockResults: AnalysisResult[] = [
-        { 
-          label: 'Low Empathy', 
-          score: 0.15,
-          advice: 'The response feels a bit detached. Try acknowledging the seeker\'s feelings more directly to build a stronger connection.'
-        },
-        { 
-          label: 'Medium Empathy', 
-          score: 0.25,
-          advice: 'Good start! You\'ve acknowledged the situation, but adding a personal touch or a more supportive closing could help.'
-        },
-        { 
-          label: 'High Empathy', 
-          score: 0.60,
-          advice: 'Excellent. This response shows deep understanding and emotional resonance. It creates a safe space for the seeker.'
-        }
-      ];
-      
-      const topResult = mockResults.sort((a, b) => b.score - a.score)[0];
-      setResult(topResult);
+      const data = JSON.parse(response.text);
+      setResult(data);
     } catch (err) {
+      console.error('Analysis error:', err);
       setError('Failed to connect with the AI Companion. Please try again.');
     } finally {
       setIsAnalyzing(false);
     }
+  };
+
+  const handleConfirmBooking = () => {
+    setShowBooking(false);
+    setShowBookingConfirmation(true);
   };
 
   return (
@@ -356,10 +369,7 @@ export function EmpathyLab({ user }: { user: any }) {
                 <Button 
                   variant="primary" 
                   className="w-full py-6 text-lg rounded-2xl"
-                  onClick={() => {
-                    alert('Booking confirmed! You will receive a confirmation email shortly.');
-                    setShowBooking(false);
-                  }}
+                  onClick={handleConfirmBooking}
                 >
                   Confirm Appointment
                 </Button>
@@ -372,12 +382,43 @@ export function EmpathyLab({ user }: { user: any }) {
           </>
         )}
       </AnimatePresence>
+
+      {/* Booking Confirmation Modal */}
+      <AnimatePresence>
+        {showBookingConfirmation && (
+          <>
+            <motion.div 
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              onClick={() => setShowBookingConfirmation(false)}
+              className="fixed inset-0 bg-slate-primary/40 backdrop-blur-md z-[100]"
+            />
+            <motion.div
+              initial={{ opacity: 0, scale: 0.9, y: 20 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.9, y: 20 }}
+              className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full max-w-md bg-white rounded-[3rem] shadow-2xl p-12 z-[110] text-center space-y-6"
+            >
+              <div className="w-20 h-20 bg-emerald-50 text-emerald-600 rounded-full flex items-center justify-center mx-auto">
+                <UserCheck size={40} />
+              </div>
+              <h3 className="text-3xl font-serif font-bold text-slate-primary">Booking Confirmed</h3>
+              <p className="text-stone-500 leading-relaxed">
+                Your appointment with Dr. Sarah Mitchell has been scheduled. You will receive a confirmation email with the details shortly.
+              </p>
+              <Button 
+                variant="primary" 
+                className="w-full py-4 rounded-xl"
+                onClick={() => setShowBookingConfirmation(false)}
+              >
+                Great, thanks!
+              </Button>
+            </motion.div>
+          </>
+        )}
+      </AnimatePresence>
     </Layout>
   );
 }
 
-const X = ({ size, className }: { size: number, className?: string }) => (
-  <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}>
-    <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
-  </svg>
-);

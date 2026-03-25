@@ -17,7 +17,7 @@ import { Home } from './pages/Home';
 import { Onboarding } from './pages/Onboarding';
 import { Social } from './pages/Social';
 import { Services } from './pages/Services';
-import { Admin } from './pages/Admin';
+import { Admin } from './pages/admin/AdminPage';
 import { KnowledgeHub } from './pages/KnowledgeHub';
 import { EmpathyLab } from './pages/EmpathyLab';
 import Profile from './pages/Profile';

@@ -1,15 +1,15 @@
 import React from 'react';
-import { Layout } from '../components/Layout';
-import { Card } from '../components/Card';
-import { Button } from '../components/Button';
+import { Layout } from '../../components/Layout';
+import { Card } from '../../components/Card';
+import { Button } from '../../components/Button';
 import { ShieldCheck, Users, Activity, Calendar, AlertCircle, MessageSquare, ArrowRight, ClipboardList, Stethoscope, Search, Pill } from 'lucide-react';
 import { motion } from 'motion/react';
 import { useNavigate } from 'react-router-dom';
-import { cn } from '../utils/cn';
-import { HealthLogger } from '../components/HealthLogger';
-import { MedicationTracker } from '../components/MedicationTracker';
-import { CareCircleMembers } from '../components/CareCircleMembers';
-import { auth, db } from '../firebase';
+import { cn } from '../../utils/cn';
+import { HealthLogger } from '../../components/HealthLogger';
+import { MedicationTracker } from '../../components/MedicationTracker';
+import { CareCircleMembers } from '../../components/CareCircleMembers';
+import { auth, db } from '../../firebase';
 import { collection, query, where, getDocs, doc, getDoc } from 'firebase/firestore';
 import { useEffect, useState } from 'react';
 

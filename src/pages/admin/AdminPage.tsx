@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import { Layout } from '../components/Layout';
-import { Card } from '../components/Card';
-import { Button } from '../components/Button';
+import { Layout } from '../../components/Layout';
+import { Card } from '../../components/Card';
+import { Button } from '../../components/Button';
 import { ShieldAlert, Users, ShoppingBag, CheckCircle, XCircle, Trash2, Plus, Settings, Database } from 'lucide-react';
-import { db } from '../firebase';
+import { db } from '../../firebase';
 import { collection, onSnapshot, query, doc, updateDoc, deleteDoc, addDoc, serverTimestamp } from 'firebase/firestore';
-import { cn } from '../utils/cn';
+import { cn } from '../../utils/cn';
 
 export function Admin({ user }: { user: any }) {
   const [users, setUsers] = useState<any[]>([]);
