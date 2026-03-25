@@ -10,18 +10,18 @@ interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
 export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
   ({ className, variant = 'primary', size = 'lg', ...props }, ref) => {
     const variants = {
-      primary: 'bg-slate-primary text-linen-bg hover:bg-slate-primary/90 shadow-lg shadow-slate-primary/20 border border-slate-primary',
-      secondary: 'bg-transparent text-slate-primary border-2 border-slate-primary hover:bg-slate-primary hover:text-linen-bg',
-      accent: 'bg-sage-accent text-linen-bg hover:bg-sage-accent/90 shadow-lg shadow-sage-accent/20 border border-sage-accent',
-      danger: 'bg-terracotta text-linen-bg hover:bg-terracotta/90 shadow-lg shadow-terracotta/20 border border-terracotta',
-      ghost: 'bg-transparent text-slate-primary hover:bg-stone-100',
+      primary: 'bg-brand-primary text-white hover:bg-brand-primary/90 shadow-md shadow-brand-primary/10 border border-brand-primary',
+      secondary: 'bg-transparent text-brand-primary border-2 border-brand-primary hover:bg-brand-primary hover:text-white',
+      accent: 'bg-brand-accent text-white hover:bg-brand-accent/90 shadow-md shadow-brand-accent/10 border border-brand-accent',
+      danger: 'bg-red-600 text-white hover:bg-red-700 shadow-md shadow-red-600/10 border border-red-600',
+      ghost: 'bg-transparent text-brand-primary hover:bg-stone-100',
     };
 
     const sizes = {
-      sm: 'px-4 py-2 text-sm min-h-[40px]',
-      md: 'px-6 py-3 text-base font-bold uppercase tracking-wider min-h-[56px]',
-      lg: 'px-8 py-4 text-lg font-bold uppercase tracking-widest min-h-[64px]',
-      xl: 'px-10 py-5 text-xl font-bold uppercase tracking-[0.2em] min-h-[72px]',
+      sm: 'px-3 py-1.5 text-xs font-bold uppercase tracking-wider min-h-[36px]',
+      md: 'px-5 py-2.5 text-sm font-bold uppercase tracking-wider min-h-[48px]',
+      lg: 'px-6 py-3 text-base font-bold uppercase tracking-widest min-h-[56px]',
+      xl: 'px-8 py-4 text-lg font-bold uppercase tracking-[0.2em] min-h-[64px]',
     };
 
     return (

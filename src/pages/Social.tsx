@@ -24,27 +24,27 @@ export function Social({ user }: { user: any }) {
 
   return (
     <Layout userRole={user?.role}>
-      <div className="space-y-24">
-        <header className="max-w-3xl">
-          <span className="text-sm font-sans font-bold uppercase tracking-[0.3em] text-sage-accent mb-6 block">
+      <div className="space-y-8 lg:space-y-10">
+        <header className="max-w-2xl">
+          <span className="text-[9px] font-sans font-bold uppercase tracking-[0.3em] text-brand-accent mb-3 block">
             {isProfessional ? 'Clinical Network' : 'Community Hub'}
           </span>
-          <h2 className="text-4xl font-serif font-bold text-slate-primary leading-tight mb-8">
+          <h2 className="text-xl lg:text-2xl font-serif font-bold text-brand-primary leading-tight mb-4">
             {isProfessional ? 'Patient Care & Coordination' : 'Connection is the cornerstone of health.'}
           </h2>
-          <p className="text-xl text-stone-500 font-sans leading-relaxed">
+          <p className="text-sm lg:text-base text-stone-500 font-sans leading-relaxed">
             {isProfessional 
               ? 'Manage your patient list, review clinical alerts, and communicate with care teams.' 
               : 'Engage with local activities or reach out to your dedicated care network.'}
           </p>
         </header>
 
-        <div className="flex border-b border-stone-200">
+        <div className="flex border-b border-stone-200 overflow-x-auto no-scrollbar">
           <button
             onClick={() => setActiveTab('events')}
             className={cn(
-              'px-8 py-4 text-lg font-serif font-bold transition-all border-b-4 -mb-1',
-              activeTab === 'events' ? 'border-sage-accent text-slate-primary' : 'border-transparent text-stone-400'
+              'px-5 py-2.5 text-sm font-serif font-bold transition-all border-b-2 -mb-[1px] whitespace-nowrap',
+              activeTab === 'events' ? 'border-brand-accent text-brand-primary' : 'border-transparent text-stone-400'
             )}
           >
             {isProfessional ? 'Patient Directory' : 'Local Activities'}
@@ -52,8 +52,8 @@ export function Social({ user }: { user: any }) {
           <button
             onClick={() => setActiveTab('chat')}
             className={cn(
-              'px-8 py-4 text-lg font-serif font-bold transition-all border-b-4 -mb-1',
-              activeTab === 'chat' ? 'border-sage-accent text-slate-primary' : 'border-transparent text-stone-400'
+              'px-5 py-2.5 text-sm font-serif font-bold transition-all border-b-2 -mb-[1px] whitespace-nowrap',
+              activeTab === 'chat' ? 'border-brand-accent text-brand-primary' : 'border-transparent text-stone-400'
             )}
           >
             Secure Messaging
@@ -61,32 +61,32 @@ export function Social({ user }: { user: any }) {
         </div>
 
         {activeTab === 'events' ? (
-          <div className="space-y-12">
-            <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-6">
-              <div className="space-y-2">
-                <h3 className="text-2xl font-serif font-bold text-slate-primary">
+          <div className="space-y-6 lg:space-y-8">
+            <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-3">
+              <div className="space-y-0.5">
+                <h3 className="text-lg font-serif font-bold text-brand-primary">
                   {isProfessional ? 'Active Patients' : 'Upcoming Gatherings'}
                 </h3>
-                <p className="text-lg text-stone-500">
+                <p className="text-xs text-stone-500">
                   {isProfessional 
                     ? 'Patients currently assigned to your clinical care team.' 
                     : 'Curated events designed for social engagement and physical wellness.'}
                 </p>
               </div>
               {isProfessional ? (
-                <Button variant="secondary" size="md" className="flex items-center gap-3">
-                  <UserPlus size={20} />
+                <Button variant="secondary" size="sm" className="flex items-center gap-1.5 text-xs">
+                  <UserPlus size={14} />
                   <span>Add Patient</span>
                 </Button>
               ) : (
-                <Button variant="secondary" size="md" className="flex items-center gap-3">
-                  <Plus size={20} />
+                <Button variant="secondary" size="sm" className="flex items-center gap-1.5 text-xs">
+                  <Plus size={14} />
                   <span>Propose Event</span>
                 </Button>
               )}
             </div>
 
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-5 lg:gap-6">
               {isProfessional ? (
                 // Professional Patient List
                 [
@@ -100,20 +100,20 @@ export function Social({ user }: { user: any }) {
                     description={`Patient ID: ${patient.id}`}
                     className="flex flex-col h-full"
                   >
-                    <div className="mt-auto pt-8 space-y-6 border-t border-stone-100">
+                    <div className="mt-auto pt-4 space-y-3 border-t border-stone-100">
                       <div className="flex items-center justify-between">
                         <span className={cn(
-                          "px-3 py-1 rounded-full text-xs font-bold uppercase tracking-widest",
+                          "px-1.5 py-0.5 rounded-full text-[9px] font-bold uppercase tracking-widest",
                           patient.status === 'Stable' ? "bg-emerald-50 text-emerald-600" :
-                          patient.status === 'Critical' ? "bg-terracotta/10 text-terracotta" : "bg-orange-50 text-orange-600"
+                          patient.status === 'Critical' ? "bg-red-50 text-red-600" : "bg-orange-50 text-orange-600"
                         )}>
                           {patient.status}
                         </span>
-                        <span className="text-sm text-stone-400 font-sans italic">Last visit: {patient.lastVisit}</span>
+                        <span className="text-[10px] text-stone-400 font-sans italic">Last visit: {patient.lastVisit}</span>
                       </div>
-                      <div className="flex gap-4">
-                        <Button variant="secondary" size="md" className="flex-1">View Records</Button>
-                        <Button variant="accent" size="md" className="flex-1">Schedule Visit</Button>
+                      <div className="flex gap-2">
+                        <Button variant="secondary" size="sm" className="flex-1 text-[10px] py-1.5">View Records</Button>
+                        <Button variant="accent" size="sm" className="flex-1 text-[10px] py-1.5">Schedule Visit</Button>
                       </div>
                     </div>
                   </Card>
@@ -128,59 +128,59 @@ export function Social({ user }: { user: any }) {
                       description={event.description}
                       className="flex flex-col h-full"
                     >
-                      <div className="mt-auto pt-8 space-y-6 border-t border-stone-100">
-                        <div className="flex flex-col gap-3">
-                          <div className="flex items-center gap-3 text-stone-500">
-                            <MapPin size={20} className="text-sage-accent" />
-                            <span className="text-lg font-medium">{event.location || 'Local Community Center'}</span>
+                      <div className="mt-auto pt-4 space-y-3 border-t border-stone-100">
+                        <div className="flex flex-col gap-1.5">
+                          <div className="flex items-center gap-1.5 text-stone-500">
+                            <MapPin size={14} className="text-brand-accent" />
+                            <span className="text-xs font-medium">{event.location || 'Local Community Center'}</span>
                           </div>
-                          <div className="flex items-center gap-3 text-stone-500">
-                            <Clock size={20} className="text-sage-accent" />
-                            <span className="text-lg font-medium">Today at 2:00 PM</span>
+                          <div className="flex items-center gap-1.5 text-stone-500">
+                            <Clock size={14} className="text-brand-accent" />
+                            <span className="text-xs font-medium">Today at 2:00 PM</span>
                           </div>
                         </div>
-                        <div className="flex items-center justify-between pt-4">
-                          <div className="flex -space-x-3">
-                            {[1, 2, 3, 4].map(i => (
-                              <div key={i} className="w-10 h-10 rounded-full border-2 border-white bg-stone-200" />
+                        <div className="flex items-center justify-between pt-1.5">
+                          <div className="flex -space-x-1.5">
+                            {[1, 2, 3].map(i => (
+                              <div key={i} className="w-7 h-7 rounded-full border-2 border-white bg-stone-200" />
                             ))}
-                            <div className="w-10 h-10 rounded-full border-2 border-white bg-linen-bg flex items-center justify-center text-xs font-bold text-stone-500">
+                            <div className="w-7 h-7 rounded-full border-2 border-white bg-stone-50 flex items-center justify-center text-[9px] font-bold text-stone-500">
                               +12
                             </div>
                           </div>
-                          <Button variant="accent" size="md">Register Interest</Button>
+                          <Button variant="accent" size="sm" className="text-xs py-1.5">Register</Button>
                         </div>
                       </div>
                     </Card>
                   ))
                 ) : (
-                  <div className="col-span-full py-32 text-center bg-white border border-stone-200 rounded-xl">
-                    <Users size={64} className="mx-auto text-stone-200 mb-8" />
-                    <p className="text-2xl font-serif text-stone-400">No events are currently scheduled in your area.</p>
+                  <div className="col-span-full py-16 text-center bg-white border border-stone-200 rounded-xl">
+                    <Users size={40} className="mx-auto text-stone-200 mb-4" />
+                    <p className="text-lg font-serif text-stone-400">No events are currently scheduled.</p>
                   </div>
                 )
               )}
             </div>
           </div>
         ) : (
-          <div className="space-y-8 max-w-4xl">
+          <div className="space-y-5 max-w-3xl">
             <div className="flex items-center justify-between">
-              <h3 className="text-2xl font-serif font-bold text-slate-primary">Active Conversations</h3>
-              <Button variant="secondary" size="md" className="flex items-center gap-3">
-                <UserPlus size={20} />
+              <h3 className="text-lg font-serif font-bold text-brand-primary">Active Conversations</h3>
+              <Button variant="secondary" size="sm" className="flex items-center gap-1.5 text-xs">
+                <UserPlus size={14} />
                 <span>New Message</span>
               </Button>
             </div>
 
-            <div className="space-y-6">
+            <div className="space-y-3">
               <Card
                 title="Clinical Support Team"
                 description="Our nurses are available for any health-related inquiries."
-                className="border-l-8 border-l-sage-accent cursor-pointer hover:bg-stone-50"
+                className="border-l-4 border-l-brand-accent cursor-pointer hover:bg-stone-50"
               >
-                <div className="mt-6 flex items-center justify-between">
-                  <span className="text-sm font-bold uppercase tracking-widest text-sage-accent">Online Now</span>
-                  <Button variant="ghost" className="font-bold">Open Secure Chat</Button>
+                <div className="mt-3 flex items-center justify-between">
+                  <span className="text-[9px] font-bold uppercase tracking-widest text-brand-accent">Online Now</span>
+                  <Button variant="ghost" size="sm" className="font-bold text-[10px]">Open Secure Chat</Button>
                 </div>
               </Card>
 
@@ -189,9 +189,9 @@ export function Social({ user }: { user: any }) {
                 description="Recent update from Sarah regarding the weekend visit."
                 className="cursor-pointer hover:bg-stone-50"
               >
-                <div className="mt-6 flex items-center justify-between">
-                  <span className="text-sm font-bold uppercase tracking-widest text-stone-400">2 hours ago</span>
-                  <Button variant="ghost" className="font-bold">View Thread</Button>
+                <div className="mt-3 flex items-center justify-between">
+                  <span className="text-[9px] font-bold uppercase tracking-widest text-stone-400">2 hours ago</span>
+                  <Button variant="ghost" size="sm" className="font-bold text-[10px]">View Thread</Button>
                 </div>
               </Card>
             </div>

@@ -21,7 +21,7 @@ import { Admin } from './pages/admin/AdminPage';
 import { KnowledgeHub } from './pages/KnowledgeHub';
 import { EmpathyLab } from './pages/EmpathyLab';
 import Profile from './pages/Profile';
-import { Loading } from './components/Loading';
+import { LoadingScreen } from './components/LoadingScreen';
 import { MedicationReminderManager } from './components/MedicationReminderManager';
 
 export default function App() {
@@ -56,7 +56,7 @@ export default function App() {
   }, []);
 
   if (loading || profileLoading) {
-    return <Loading message="Preparing your care environment" />;
+    return <LoadingScreen />;
   }
 
   if (!user) {

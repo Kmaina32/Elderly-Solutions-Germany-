@@ -10,11 +10,23 @@
   --color-brand-bg: #FAFAF9;
   --color-brand-muted: #78716C;
   --color-brand-border: #E7E5E4;
+
+  /* Custom Colors used in components */
+  --color-slate-primary: #0F172A;
+  --color-sage-accent: #5A5A40;
+  --color-terracotta: #FF6321;
+  --color-linen-bg: #FAFAF9;
+  --color-charcoal: #141414;
 }
 
 @layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+
   body {
-    @apply bg-brand-bg text-brand-primary font-sans text-[16px] md:text-[18px] leading-relaxed antialiased;
+    @apply bg-brand-bg text-brand-primary font-sans text-[16px] md:text-[18px] leading-relaxed antialiased overflow-x-hidden;
+    min-height: 100vh;
   }
   
   h1, h2, h3, h4, h5, h6 {

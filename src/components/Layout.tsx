@@ -59,7 +59,7 @@ export function Layout({ children, userRole }: LayoutProps) {
     >
       <div className="flex items-center gap-2">
         <span className={cn(
-          "font-serif font-bold tracking-tight text-slate-primary leading-none",
+          "font-serif font-bold tracking-tight text-brand-primary leading-none",
           isMobile ? "text-xl" : "text-2xl"
         )}>
           Elderly solutions
@@ -82,44 +82,44 @@ export function Layout({ children, userRole }: LayoutProps) {
     <div className="min-h-screen bg-linen-bg text-charcoal font-sans flex flex-col lg:flex-row selection:bg-sage-accent/20">
       {/* Desktop Sidebar */}
       <aside className="hidden lg:flex flex-col w-64 bg-white border-r border-stone-200 sticky top-0 h-screen z-50">
-        <div className="p-6 border-b border-stone-100">
+        <div className="p-5 border-b border-stone-100">
           <BrandName />
         </div>
         
-        <nav className="flex-1 px-3 py-6 space-y-1 overflow-y-auto">
-          <p className="px-3 text-[9px] font-bold uppercase tracking-[0.2em] text-stone-400 mb-3">Main Navigation</p>
+        <nav className="flex-1 px-3 py-4 space-y-1 overflow-y-auto">
+          <p className="px-3 text-[9px] font-bold uppercase tracking-[0.2em] text-stone-400 mb-2">Main Navigation</p>
           {bottomNavItems.map((item) => (
             <Link
               key={item.path}
               to={item.path}
               className={cn(
-                "flex items-center gap-3 px-3 py-2.5 rounded-xl transition-all group",
+                "flex items-center gap-3 px-3 py-2 rounded-xl transition-all group",
                 location.pathname === item.path 
-                  ? "bg-slate-primary text-white shadow-lg shadow-slate-primary/20" 
-                  : "text-stone-500 hover:bg-stone-50 hover:text-slate-primary"
+                  ? "bg-brand-primary text-white shadow-md shadow-brand-primary/10" 
+                  : "text-stone-500 hover:bg-stone-50 hover:text-brand-primary"
               )}
             >
-              <item.icon size={18} className={cn("transition-transform group-hover:scale-110", location.pathname === item.path ? "text-white" : "text-stone-400")} />
-              <span className="text-xs font-bold uppercase tracking-wider">{item.label}</span>
+              <item.icon size={16} className={cn("transition-transform group-hover:scale-110", location.pathname === item.path ? "text-white" : "text-stone-400")} />
+              <span className="text-[11px] font-bold uppercase tracking-wider">{item.label}</span>
             </Link>
           ))}
 
-          <div className="my-6 pt-6 border-t border-stone-100">
-            <p className="px-3 text-[9px] font-bold uppercase tracking-[0.2em] text-stone-400 mb-3">More Options</p>
+          <div className="my-4 pt-4 border-t border-stone-100">
+            <p className="px-3 text-[9px] font-bold uppercase tracking-[0.2em] text-stone-400 mb-2">More Options</p>
             {menuItems.map((item) => (
               <Link
                 key={item.path}
                 to={item.path}
                 className={cn(
-                  "flex items-center gap-3 px-3 py-2.5 rounded-xl transition-all group",
+                  "flex items-center gap-3 px-3 py-2 rounded-xl transition-all group",
                   location.pathname === item.path 
-                    ? "bg-slate-primary text-white shadow-lg shadow-slate-primary/20" 
-                    : "text-stone-500 hover:bg-stone-50 hover:text-slate-primary"
+                    ? "bg-brand-primary text-white shadow-md shadow-brand-primary/10" 
+                    : "text-stone-500 hover:bg-stone-50 hover:text-brand-primary"
                 )}
               >
-                <item.icon size={18} className={cn("transition-transform group-hover:scale-110", location.pathname === item.path ? "text-white" : "text-stone-400")} />
+                <item.icon size={16} className={cn("transition-transform group-hover:scale-110", location.pathname === item.path ? "text-white" : "text-stone-400")} />
                 <div className="flex flex-col">
-                  <span className="text-xs font-bold uppercase tracking-wider">{item.label}</span>
+                  <span className="text-[11px] font-bold uppercase tracking-wider">{item.label}</span>
                   <span className="text-[8px] opacity-60 uppercase tracking-tighter">{item.desc}</span>
                 </div>
               </Link>
@@ -127,20 +127,20 @@ export function Layout({ children, userRole }: LayoutProps) {
           </div>
         </nav>
 
-        <div className="p-5 border-t border-stone-100 space-y-3">
+        <div className="p-4 border-t border-stone-100 space-y-2">
           <button 
             onClick={() => setIsAccessibilityOpen(true)}
-            className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-stone-500 hover:bg-stone-50 hover:text-slate-primary transition-all"
+            className="w-full flex items-center gap-3 px-3 py-2 rounded-xl text-stone-500 hover:bg-stone-50 hover:text-brand-primary transition-all"
           >
-            <Type size={18} />
-            <span className="text-xs font-bold uppercase tracking-wider">Settings</span>
+            <Type size={16} />
+            <span className="text-[11px] font-bold uppercase tracking-wider">Settings</span>
           </button>
           <button 
             onClick={handleLogout}
-            className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-terracotta hover:bg-terracotta/5 transition-all"
+            className="w-full flex items-center gap-3 px-3 py-2 rounded-xl text-red-600 hover:bg-red-50 transition-all"
           >
-            <LogOut size={18} />
-            <span className="text-xs font-bold uppercase tracking-wider">Logout</span>
+            <LogOut size={16} />
+            <span className="text-[11px] font-bold uppercase tracking-wider">Logout</span>
           </button>
         </div>
       </aside>
@@ -152,32 +152,32 @@ export function Layout({ children, userRole }: LayoutProps) {
           initial={{ width: 0 }}
           animate={{ width: "100%" }}
           transition={{ duration: 0.8, ease: "easeInOut" }}
-          className="fixed top-0 left-0 lg:left-72 right-0 h-[2px] bg-sage-accent z-[60]"
+          className="fixed top-0 left-0 lg:left-64 right-0 h-[2px] bg-brand-accent z-[60]"
         />
 
         {/* Editorial Header (Mobile Only) */}
-        <header className="lg:hidden bg-white border-b border-stone-200 px-6 py-4 sticky top-0 z-50 shadow-sm">
+        <header className="lg:hidden bg-white border-b border-stone-200 px-6 py-3 sticky top-0 z-50 shadow-sm">
           <div className="max-w-5xl mx-auto flex items-center justify-between relative">
             <BrandName isMobile />
             
             <button 
               onClick={() => setIsMenuOpen(!isMenuOpen)}
-              className="p-2 text-slate-primary hover:bg-stone-100 rounded-lg transition-colors"
+              className="p-2 text-brand-primary hover:bg-stone-100 rounded-lg transition-colors"
               aria-label="Toggle Menu"
             >
-              {isMenuOpen ? <X size={28} /> : <Menu size={28} />}
+              {isMenuOpen ? <X size={24} /> : <Menu size={24} />}
             </button>
           </div>
         </header>
 
         {/* Desktop Header (Simplified, only for Care Ecosystem) */}
-        <header className="hidden lg:block bg-white/80 backdrop-blur-md border-b border-stone-100 px-8 py-3 sticky top-0 z-40">
+        <header className="hidden lg:block bg-white/80 backdrop-blur-md border-b border-stone-100 px-8 py-2 sticky top-0 z-40">
           <div className="flex items-center justify-between max-w-5xl mx-auto">
             <button
               onClick={() => setIsSolutionsOpen(!isSolutionsOpen)}
               className={cn(
-                'text-[9px] font-bold uppercase tracking-[0.2em] transition-all hover:text-sage-accent py-1.5 flex items-center gap-2',
-                isSolutionsOpen ? 'text-slate-primary' : 'text-stone-400'
+                'text-[9px] font-bold uppercase tracking-[0.2em] transition-all hover:text-brand-accent py-1.5 flex items-center gap-2',
+                isSolutionsOpen ? 'text-brand-primary' : 'text-stone-400'
               )}
             >
               Care Ecosystem <ChevronDown size={10} className={cn("transition-transform", isSolutionsOpen && "rotate-180")} />
@@ -359,7 +359,7 @@ export function Layout({ children, userRole }: LayoutProps) {
       </AnimatePresence>
 
       {/* Main Content Area */}
-      <main className="flex-1 w-full px-6 pt-10 pb-28 lg:pb-12 overflow-x-hidden">
+      <main className="flex-1 w-full px-6 pt-8 pb-32 lg:pb-12 overflow-x-hidden">
         <AnimatePresence mode="wait">
           <motion.div
             key={location.pathname}
@@ -375,7 +375,7 @@ export function Layout({ children, userRole }: LayoutProps) {
       </main>
 
       {/* Persistent Bottom Navigation Bar (Mobile Only) */}
-      <div className="fixed bottom-0 left-0 right-0 z-50 bg-white/90 backdrop-blur-xl border-t border-stone-200 px-4 py-2 lg:hidden">
+      <div className="fixed bottom-0 left-0 right-0 z-50 bg-white/95 backdrop-blur-xl border-t border-stone-200 px-4 py-2 lg:hidden">
         <div className="max-w-lg mx-auto flex items-center justify-between gap-1">
           {bottomNavItems.map((item) => (
             <Link
@@ -384,8 +384,8 @@ export function Layout({ children, userRole }: LayoutProps) {
               className={cn(
                 "flex flex-col items-center gap-1 px-3 py-1.5 rounded-xl transition-all active:scale-90",
                 location.pathname === item.path 
-                  ? "text-slate-primary bg-stone-100" 
-                  : "text-stone-400 hover:text-slate-primary"
+                  ? "text-brand-primary bg-stone-100" 
+                  : "text-stone-400 hover:text-brand-primary"
               )}
             >
               <item.icon size={20} strokeWidth={location.pathname === item.path ? 2.5 : 2} />
@@ -397,7 +397,7 @@ export function Layout({ children, userRole }: LayoutProps) {
             onClick={() => setIsMenuOpen(!isMenuOpen)}
             className={cn(
               "flex flex-col items-center gap-1 px-3 py-1.5 rounded-xl transition-all active:scale-90",
-              isMenuOpen ? "text-slate-primary bg-stone-100" : "text-stone-400 hover:text-slate-primary"
+              isMenuOpen ? "text-brand-primary bg-stone-100" : "text-stone-400 hover:text-brand-primary"
             )}
           >
             <LayoutGrid size={20} strokeWidth={isMenuOpen ? 2.5 : 2} />
@@ -409,21 +409,21 @@ export function Layout({ children, userRole }: LayoutProps) {
       {/* Floating Assistance Button (FAB) */}
       <button
         onClick={() => setIsHelpOpen(true)}
-        className="fixed bottom-24 lg:bottom-12 right-6 lg:right-12 w-14 h-14 bg-terracotta text-white rounded-full shadow-2xl flex items-center justify-center z-[60] active:scale-95 transition-transform hover:bg-terracotta/90"
+        className="fixed bottom-24 lg:bottom-12 right-6 lg:right-12 w-14 h-14 bg-red-600 text-white rounded-full shadow-2xl flex items-center justify-center z-[60] active:scale-95 transition-transform hover:bg-red-700"
         aria-label="Get Assistance"
       >
         <LifeBuoy size={28} className="animate-pulse" />
       </button>
 
       {/* Editorial Footer */}
-      <footer className="hidden lg:block bg-slate-primary text-linen-bg/60 py-16 px-8 border-t border-stone-200 ml-0">
+      <footer className="hidden lg:block bg-brand-primary text-white/60 py-12 px-8 border-t border-stone-200 ml-0">
         <div className="max-w-5xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-12">
           <div className="space-y-4">
             <div className="flex flex-col">
-              <span className="text-base font-serif font-bold tracking-tight text-linen-bg">
+              <span className="text-base font-serif font-bold tracking-tight text-white">
                 Elderly solutions
               </span>
-              <span className="text-[10px] font-sans font-bold uppercase tracking-[0.3em] text-linen-bg/40 mt-1">
+              <span className="text-[10px] font-sans font-bold uppercase tracking-[0.3em] text-white/40 mt-1">
                 Dignified Care
               </span>
             </div>
@@ -432,20 +432,20 @@ export function Layout({ children, userRole }: LayoutProps) {
             </p>
           </div>
           <div className="space-y-4">
-            <h4 className="text-linen-bg font-serif text-base font-bold">Resources</h4>
+            <h4 className="text-white font-serif text-base font-bold">Resources</h4>
             <nav className="flex flex-col gap-3">
-              <a href="#" className="hover:text-linen-bg transition-colors text-xs">Privacy Policy</a>
-              <a href="#" className="hover:text-linen-bg transition-colors text-xs">Terms of Service</a>
-              <a href="#" className="hover:text-linen-bg transition-colors text-xs">Accessibility Statement</a>
+              <a href="#" className="hover:text-white transition-colors text-xs">Privacy Policy</a>
+              <a href="#" className="hover:text-white transition-colors text-xs">Terms of Service</a>
+              <a href="#" className="hover:text-white transition-colors text-xs">Accessibility Statement</a>
             </nav>
           </div>
           <div className="space-y-4">
-            <h4 className="text-linen-bg font-serif text-base font-bold">Contact</h4>
+            <h4 className="text-white font-serif text-base font-bold">Contact</h4>
             <p className="text-sm">support@elderlysolutions.com</p>
             <p className="text-sm">1-800-ELDERLY</p>
           </div>
         </div>
-        <div className="max-w-5xl mx-auto mt-16 pt-8 border-t border-linen-bg/10 text-center text-[10px] uppercase tracking-[0.2em] text-linen-bg/30">
+        <div className="max-w-5xl mx-auto mt-12 pt-8 border-t border-white/10 text-center text-[10px] uppercase tracking-[0.2em] text-white/30">
           © 2026 Elderly solutions Healthcare Technology Studio
         </div>
       </footer>
@@ -469,8 +469,8 @@ export function Layout({ children, userRole }: LayoutProps) {
             >
               <div className="space-y-6">
                 <div className="flex items-center justify-between">
-                  <h3 className="text-xl font-serif font-bold text-slate-primary">Accessibility</h3>
-                  <button onClick={() => setIsAccessibilityOpen(false)} className="text-stone-400 hover:text-slate-primary">
+                  <h3 className="text-xl font-serif font-bold text-brand-primary">Accessibility</h3>
+                  <button onClick={() => setIsAccessibilityOpen(false)} className="text-stone-400 hover:text-brand-primary">
                     <X size={24} />
                   </button>
                 </div>
@@ -491,12 +491,12 @@ export function Layout({ children, userRole }: LayoutProps) {
                         className={cn(
                           "flex items-center justify-between p-4 rounded-xl border-2 transition-all",
                           fontSize === size.id 
-                            ? "border-sage-accent bg-sage-accent/5 text-slate-primary" 
+                            ? "border-brand-accent bg-brand-accent/5 text-brand-primary" 
                             : "border-stone-100 text-stone-500 hover:border-stone-200"
                         )}
                       >
                         <span className={cn("font-medium", size.size)}>{size.label}</span>
-                        {fontSize === size.id && <CheckCircle size={20} className="text-sage-accent" />}
+                        {fontSize === size.id && <CheckCircle size={20} className="text-brand-accent" />}
                       </button>
                     ))}
                   </div>

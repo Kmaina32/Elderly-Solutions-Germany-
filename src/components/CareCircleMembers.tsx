@@ -11,13 +11,17 @@ export function CareCircleMembers({ elderlyId }: { elderlyId: string }) {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    if (!elderlyId) {
+      setLoading(false);
+      return;
+    }
     const unsubscribe = onSnapshot(doc(db, 'care_circles', elderlyId), async (snapshot) => {
       if (snapshot.exists()) {
         const data = snapshot.data();
         setCircle(data);
         
         // Fetch member details
-        const allIds = [...(data.caregiverIds || []), ...(data.professionalIds || [])];
+        const allIds = [...(data.caregiverIds || []), ...(data.professionalIds || [])].filter(id => id && typeof id === 'string' && id.trim() !== '');
         const memberData = await Promise.all(
           allIds.map(async (id) => {
             const userDoc = await getDoc(doc(db, 'users', id));

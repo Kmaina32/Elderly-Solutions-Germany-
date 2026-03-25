@@ -19,7 +19,7 @@ export function CaregiverHome({ user }: { user: any }) {
   const targetElderlyId = user?.targetElderlyId;
 
   useEffect(() => {
-    if (targetElderlyId) {
+    if (targetElderlyId && typeof targetElderlyId === 'string' && targetElderlyId.trim() !== '') {
       getDoc(doc(db, 'users', targetElderlyId)).then(doc => {
         if (doc.exists()) setPatient(doc.data());
       });

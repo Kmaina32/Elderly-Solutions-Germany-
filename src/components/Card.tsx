@@ -19,25 +19,25 @@ export function Card({ className, title, description, icon, children, ...props }
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true }}
       className={cn(
-        'bg-white border border-stone-200 rounded-3xl p-8 lg:p-12 shadow-[0_4px_20px_rgba(0,0,0,0.03)] hover:shadow-[0_8px_30px_rgba(0,0,0,0.06)] transition-all duration-500 group',
+        'bg-white border border-stone-200 rounded-2xl p-6 lg:p-8 shadow-sm hover:shadow-md transition-all duration-300 group',
         className
       )}
       {...props}
     >
-      <div className="flex flex-col lg:flex-row items-start gap-6 lg:gap-10 mb-8 lg:mb-12">
+      <div className="flex flex-col lg:flex-row items-start gap-4 lg:gap-6 mb-6 lg:mb-8">
         {icon && (
-          <div className="p-5 bg-linen-bg rounded-2xl text-slate-primary border border-stone-100 group-hover:scale-105 transition-transform duration-500 shadow-sm">
+          <div className="p-3 bg-stone-50 rounded-xl text-brand-primary border border-stone-100 group-hover:scale-105 transition-transform duration-300 shadow-xs">
             {icon}
           </div>
         )}
-        <div className="flex-1 space-y-3">
+        <div className="flex-1 space-y-2">
           {title && (
-            <h3 className="text-2xl lg:text-3xl font-serif font-bold text-slate-primary leading-tight tracking-tight">
+            <h3 className="text-xl lg:text-2xl font-serif font-bold text-brand-primary leading-tight tracking-tight">
               {title}
             </h3>
           )}
           {description && (
-            <p className="text-base lg:text-lg text-stone-500 font-sans leading-relaxed max-w-2xl">
+            <p className="text-sm lg:text-base text-stone-500 font-sans leading-relaxed max-w-2xl">
               {description}
             </p>
           )}

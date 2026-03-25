@@ -53,77 +53,77 @@ export function Signup() {
   };
 
   return (
-    <div className="min-h-screen bg-brand-bg flex flex-col lg:flex-row overflow-hidden">
+    <div className="min-h-screen bg-brand-bg flex flex-col lg:flex-row">
       {/* Left Side: Content */}
-      <div className="flex-1 flex flex-col justify-center px-6 sm:px-12 lg:px-20 py-10 lg:py-16 bg-white z-10">
+      <div className="flex-1 flex flex-col justify-center px-6 sm:px-10 lg:px-16 py-8 lg:py-12 bg-white z-10">
         <motion.div
           initial={{ opacity: 0, x: -20 }}
           animate={{ opacity: 1, x: 0 }}
           transition={{ duration: 0.6, ease: "easeOut" }}
-          className="max-w-sm w-full mx-auto lg:mx-0"
+          className="max-w-xs w-full mx-auto lg:mx-0"
         >
-          <div className="mb-8">
-            <h2 className="text-xl font-serif font-black text-brand-primary flex items-center gap-2">
-              <span className="w-7 h-7 bg-brand-accent rounded-lg flex items-center justify-center text-white text-base italic">E</span>
+          <div className="mb-6">
+            <h2 className="text-lg font-serif font-black text-brand-primary flex items-center gap-2">
+              <span className="w-6 h-6 bg-brand-accent rounded-lg flex items-center justify-center text-white text-sm italic">E</span>
               ElderlyCare
             </h2>
-            <p className="text-brand-muted text-[10px] font-bold tracking-[0.2em] uppercase mt-1">Join our global community</p>
+            <p className="text-brand-muted text-[9px] font-bold tracking-[0.2em] uppercase mt-1">Join our global community</p>
           </div>
 
-          <div className="mb-8">
-            <h1 className="text-4xl lg:text-5xl font-serif font-bold text-brand-primary leading-tight mb-4">
+          <div className="mb-6">
+            <h1 className="text-3xl lg:text-4xl font-serif font-bold text-brand-primary leading-tight mb-3">
               Start Your <br />
               <span className="text-brand-accent italic">Journey.</span>
             </h1>
-            <p className="text-sm text-brand-muted leading-relaxed">
+            <p className="text-xs text-brand-muted leading-relaxed">
               Create an account to connect with verified caregivers and track health vitals.
             </p>
           </div>
 
-          <form onSubmit={handleManualSignup} className="space-y-4 mb-6">
+          <form onSubmit={handleManualSignup} className="space-y-3 mb-5">
             {error && (
-              <div className="p-3 bg-red-50 border border-red-100 text-red-600 text-xs rounded-xl">
+              <div className="p-2.5 bg-red-50 border border-red-100 text-red-600 text-[10px] rounded-xl">
                 {error}
               </div>
             )}
             <div className="space-y-1">
-              <label className="text-[10px] font-bold uppercase tracking-widest text-brand-muted ml-1">Full Name</label>
+              <label className="text-[9px] font-bold uppercase tracking-widest text-brand-muted ml-1">Full Name</label>
               <div className="relative">
-                <User className="absolute left-4 top-1/2 -translate-y-1/2 text-brand-muted" size={18} />
+                <User className="absolute left-3.5 top-1/2 -translate-y-1/2 text-brand-muted" size={16} />
                 <input 
                   type="text" 
                   value={name}
                   onChange={(e) => setName(e.target.value)}
                   required
-                  className="w-full pl-12 pr-4 py-3 bg-brand-bg border-2 border-transparent focus:border-brand-accent rounded-xl text-sm transition-all outline-hidden"
+                  className="w-full pl-10 pr-3 py-2.5 bg-brand-bg border-2 border-transparent focus:border-brand-accent rounded-xl text-xs transition-all outline-hidden"
                   placeholder="John Doe"
                 />
               </div>
             </div>
             <div className="space-y-1">
-              <label className="text-[10px] font-bold uppercase tracking-widest text-brand-muted ml-1">Email Address</label>
+              <label className="text-[9px] font-bold uppercase tracking-widest text-brand-muted ml-1">Email Address</label>
               <div className="relative">
-                <Mail className="absolute left-4 top-1/2 -translate-y-1/2 text-brand-muted" size={18} />
+                <Mail className="absolute left-3.5 top-1/2 -translate-y-1/2 text-brand-muted" size={16} />
                 <input 
                   type="email" 
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   required
-                  className="w-full pl-12 pr-4 py-3 bg-brand-bg border-2 border-transparent focus:border-brand-accent rounded-xl text-sm transition-all outline-hidden"
+                  className="w-full pl-10 pr-3 py-2.5 bg-brand-bg border-2 border-transparent focus:border-brand-accent rounded-xl text-xs transition-all outline-hidden"
                   placeholder="name@example.com"
                 />
               </div>
             </div>
             <div className="space-y-1">
-              <label className="text-[10px] font-bold uppercase tracking-widest text-brand-muted ml-1">Password</label>
+              <label className="text-[9px] font-bold uppercase tracking-widest text-brand-muted ml-1">Password</label>
               <div className="relative">
-                <Lock className="absolute left-4 top-1/2 -translate-y-1/2 text-brand-muted" size={18} />
+                <Lock className="absolute left-3.5 top-1/2 -translate-y-1/2 text-brand-muted" size={16} />
                 <input 
                   type="password" 
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   required
-                  className="w-full pl-12 pr-4 py-3 bg-brand-bg border-2 border-transparent focus:border-brand-accent rounded-xl text-sm transition-all outline-hidden"
+                  className="w-full pl-10 pr-3 py-2.5 bg-brand-bg border-2 border-transparent focus:border-brand-accent rounded-xl text-xs transition-all outline-hidden"
                   placeholder="••••••••"
                 />
               </div>
@@ -131,37 +131,38 @@ export function Signup() {
             <Button 
               type="submit" 
               variant="primary" 
-              className="w-full py-3 text-sm font-bold flex items-center justify-center gap-2"
+              size="sm"
+              className="w-full py-2.5 text-xs font-bold flex items-center justify-center gap-2"
               disabled={loading}
             >
               {loading ? 'Creating Account...' : 'Create Account'}
-              <ArrowRight size={16} />
+              <ArrowRight size={14} />
             </Button>
           </form>
 
-          <div className="relative mb-6">
+          <div className="relative mb-5">
             <div className="absolute inset-0 flex items-center">
               <div className="w-full border-t border-brand-border"></div>
             </div>
-            <div className="relative flex justify-center text-[10px] uppercase font-bold tracking-widest">
-              <span className="bg-white px-4 text-brand-muted">Or continue with</span>
+            <div className="relative flex justify-center text-[9px] uppercase font-bold tracking-widest">
+              <span className="bg-white px-3 text-brand-muted">Or continue with</span>
             </div>
           </div>
 
-          <div className="space-y-6">
+          <div className="space-y-5">
             <button 
               onClick={handleGoogleLogin}
-              className="w-full flex items-center justify-center gap-3 px-6 py-3 bg-brand-primary text-white text-sm font-bold rounded-xl hover:bg-brand-primary/90 transition-all active:scale-[0.98] shadow-lg shadow-brand-primary/20"
+              className="w-full flex items-center justify-center gap-2 px-4 py-2.5 bg-brand-primary text-white text-xs font-bold rounded-xl hover:bg-brand-primary/90 transition-all active:scale-[0.98] shadow-lg shadow-brand-primary/20"
             >
-              <svg width="18" height="18" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+              <svg width="16" height="16" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                 <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="currentColor"/>
                 <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="currentColor" opacity="0.8"/>
               </svg>
               <span>Google</span>
             </button>
 
-            <div className="pt-6 border-t border-brand-border">
-              <p className="text-brand-muted text-xs">
+            <div className="pt-5 border-t border-brand-border">
+              <p className="text-brand-muted text-[10px]">
                 Already have an account?{" "}
                 <Link to="/login" className="text-brand-accent font-bold hover:underline">
                   Sign in here

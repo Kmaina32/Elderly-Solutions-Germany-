@@ -27,7 +27,7 @@ export function ProfessionalHome({ user }: { user: any }) {
         where('professionalIds', 'array-contains', auth.currentUser.uid)
       );
       const snapshot = await getDocs(q);
-      const patientIds = snapshot.docs.map(doc => doc.data().elderlyId);
+      const patientIds = snapshot.docs.map(doc => doc.data().elderlyId).filter(id => id && typeof id === 'string' && id.trim() !== '');
       
       const patientData = await Promise.all(
         patientIds.map(async (id) => {

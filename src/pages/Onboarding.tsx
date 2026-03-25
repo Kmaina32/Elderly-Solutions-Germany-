@@ -91,7 +91,7 @@ export function Onboarding({ onComplete }: { onComplete: () => void }) {
         updatedAt: serverTimestamp(),
       });
     } else if (formData.role === 'caregiver' || formData.role === 'professional') {
-      if (formData.targetElderlyId) {
+      if (formData.targetElderlyId && formData.targetElderlyId.trim() !== '') {
         const circleRef = doc(db, 'care_circles', formData.targetElderlyId);
         const field = formData.role === 'caregiver' ? 'caregiverIds' : 'professionalIds';
         
