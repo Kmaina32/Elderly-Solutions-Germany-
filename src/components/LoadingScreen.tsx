@@ -36,11 +36,10 @@ export function LoadingScreen() {
           <motion.div
             animate={{ rotate: [0, 10, -10, 0] }}
             transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
-            className="absolute -top-4 -right-4 bg-brand-primary p-2.5 rounded-2xl shadow-lg text-white"
+            className="text-brand-primary"
           >
-            <Stethoscope size={20} />
+            <Stethoscope size={56} />
           </motion.div>
-          <Heart size={56} className="text-brand-accent fill-brand-accent/10" />
         </div>
       </motion.div>
 
@@ -52,7 +51,7 @@ export function LoadingScreen() {
       >
         <h2 className="text-3xl font-serif font-black text-brand-primary flex items-center gap-3 justify-center">
           <span className="w-10 h-10 bg-brand-accent rounded-xl flex items-center justify-center text-white text-xl italic shadow-lg shadow-brand-accent/20">E</span>
-          ElderlyCare
+          Elderly Solutions
         </h2>
         <motion.div 
           className="flex items-center justify-center gap-1 mt-4"

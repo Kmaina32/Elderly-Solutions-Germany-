@@ -2,9 +2,9 @@ import React, { useState, useEffect } from 'react';
 import { Layout } from '../../components/Layout';
 import { Card } from '../../components/Card';
 import { Button } from '../../components/Button';
-import { ShieldCheck, Users, Activity, Calendar, AlertCircle, MessageSquare, ArrowRight, ClipboardList, Stethoscope, Search, Pill, UserPlus, ChevronRight, UserCircle } from 'lucide-react';
+import { ShieldCheck, Users, Activity, Calendar, AlertCircle, MessageSquare, ArrowRight, ClipboardList, Stethoscope, Search, Pill, UserPlus, ChevronRight, UserCircle, Heart, Brain } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import { cn } from '../../utils/cn';
 import { HealthLogger } from '../../components/HealthLogger';
 import { MedicationTracker } from '../../components/MedicationTracker';
@@ -15,7 +15,23 @@ import { collection, query, where, onSnapshot, doc, getDoc } from 'firebase/fire
 
 export function ProfessionalHome({ user }: { user: any }) {
   const navigate = useNavigate();
-  const [activeTab, setActiveTab] = useState<'dashboard' | 'patients' | 'clinical' | 'meds' | 'connect'>('dashboard');
+  const [searchParams, setSearchParams] = useSearchParams();
+  const tabParam = searchParams.get('tab');
+  
+  const [activeTab, setActiveTab] = useState<'dashboard' | 'patients' | 'clinical-plan' | 'knowledge' | 'empathy' | 'connect'>(
+    (tabParam as any) || 'dashboard'
+  );
+
+  useEffect(() => {
+    if (tabParam && ['dashboard', 'patients', 'clinical-plan', 'knowledge', 'empathy', 'connect'].includes(tabParam)) {
+      setActiveTab(tabParam as any);
+    }
+  }, [tabParam]);
+
+  const handleTabChange = (tab: string) => {
+    setActiveTab(tab as any);
+    setSearchParams({ tab });
+  };
   const [patients, setPatients] = useState<any[]>([]);
   const [selectedPatientId, setSelectedPatientId] = useState<string | null>(null);
   const [selectedPatient, setSelectedPatient] = useState<any>(null);
@@ -62,14 +78,15 @@ export function ProfessionalHome({ user }: { user: any }) {
 
   const handlePatientSelect = (patient: any) => {
     setSelectedPatientId(patient.id);
-    setActiveTab('clinical');
+    setActiveTab('clinical-plan');
   };
 
   const tabs = [
     { id: 'dashboard', label: 'Dashboard', icon: Activity },
     { id: 'patients', label: 'Patient List', icon: Users },
-    { id: 'clinical', label: 'Clinical Logs', icon: Stethoscope },
-    { id: 'meds', label: 'Medications', icon: Pill },
+    { id: 'clinical-plan', label: 'Clinical Plan', icon: ClipboardList },
+    { id: 'knowledge', label: 'Clinical Hub', icon: Search },
+    { id: 'empathy', label: 'Empathy Lab', icon: Heart },
     { id: 'connect', label: 'Add Patient', icon: UserPlus },
   ];
 
@@ -93,7 +110,7 @@ export function ProfessionalHome({ user }: { user: any }) {
               {tabs.map((tab) => (
                 <button
                   key={tab.id}
-                  onClick={() => setActiveTab(tab.id as any)}
+                  onClick={() => handleTabChange(tab.id)}
                   className={cn(
                     "w-full flex items-center gap-4 p-4 rounded-2xl transition-all group text-left",
                     activeTab === tab.id 
@@ -196,13 +213,22 @@ export function ProfessionalHome({ user }: { user: any }) {
                 <span className="text-xs font-bold text-slate-primary">Consultations</span>
               </button>
               <button 
-                onClick={() => navigate('/ai-assistant?mode=empathy')}
+                onClick={() => setActiveTab('empathy')}
                 className="flex items-center gap-3 p-3 rounded-xl bg-white border border-stone-100 hover:border-emerald-600 transition-all text-left group"
               >
                 <div className="w-8 h-8 rounded-lg bg-stone-50 flex items-center justify-center text-stone-400 group-hover:text-emerald-600">
-                  <Activity size={16} />
+                  <Heart size={16} />
                 </div>
                 <span className="text-xs font-bold text-slate-primary">Empathy Lab</span>
+              </button>
+              <button 
+                onClick={() => setActiveTab('knowledge')}
+                className="flex items-center gap-3 p-3 rounded-xl bg-white border border-stone-100 hover:border-emerald-600 transition-all text-left group"
+              >
+                <div className="w-8 h-8 rounded-lg bg-stone-50 flex items-center justify-center text-stone-400 group-hover:text-emerald-600">
+                  <Search size={16} />
+                </div>
+                <span className="text-xs font-bold text-slate-primary">Clinical Hub</span>
               </button>
             </div>
           </section>
@@ -217,21 +243,40 @@ export function ProfessionalHome({ user }: { user: any }) {
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: -20 }}
-                className="space-y-8"
+                className="space-y-6"
               >
                 <section>
-                  <span className="text-[10px] font-sans font-bold uppercase tracking-[0.3em] text-emerald-600 mb-2 block">
-                    Professional Dashboard
-                  </span>
-                  <h2 className="text-3xl lg:text-4xl font-serif font-bold text-slate-primary leading-tight mb-4">
+                  <h2 className="text-2xl lg:text-3xl font-serif font-bold text-slate-primary leading-tight">
                     Welcome, Dr. {user?.name?.split(' ')[0] || 'Professional'}.
                   </h2>
-                  <p className="text-lg text-stone-500 font-sans leading-relaxed max-w-2xl">
-                    You have <span className="text-slate-primary font-bold">{patients.length} patients</span> under your care today. Here is your clinical overview.
+                  <p className="text-sm text-stone-500 mt-1">
+                    You have <span className="text-slate-primary font-bold">{patients.length} patients</span> under your care.
                   </p>
                 </section>
 
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                {/* Mobile Clinical Tools - Side by Side */}
+                <div className="lg:hidden grid grid-cols-2 gap-3">
+                  <button 
+                    onClick={() => navigate('/services')}
+                    className="flex flex-col items-center gap-2 p-4 rounded-2xl bg-white border border-stone-100 shadow-sm active:scale-95 transition-all"
+                  >
+                    <div className="w-10 h-10 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center">
+                      <Calendar size={20} />
+                    </div>
+                    <span className="text-[10px] font-bold uppercase tracking-widest text-slate-primary">Consults</span>
+                  </button>
+                  <button 
+                    onClick={() => setActiveTab('empathy')}
+                    className="flex flex-col items-center gap-2 p-4 rounded-2xl bg-white border border-stone-100 shadow-sm active:scale-95 transition-all"
+                  >
+                    <div className="w-10 h-10 rounded-xl bg-rose-50 text-rose-600 flex items-center justify-center">
+                      <Heart size={20} />
+                    </div>
+                    <span className="text-[10px] font-bold uppercase tracking-widest text-slate-primary">Empathy Lab</span>
+                  </button>
+                </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <Card className="p-6 space-y-4 border-2 border-transparent hover:border-emerald-600/20 transition-all">
                     <div className="flex items-center justify-between">
                       <div className="w-12 h-12 rounded-2xl bg-emerald-50 text-emerald-600 flex items-center justify-center">
@@ -337,37 +382,106 @@ export function ProfessionalHome({ user }: { user: any }) {
               </motion.div>
             )}
 
-            {activeTab === 'clinical' && selectedPatient && (
+            {activeTab === 'clinical-plan' && selectedPatient && (
               <motion.div
-                key="clinical"
+                key="clinical-plan"
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: -20 }}
                 className="space-y-8"
               >
                 <section>
-                  <h2 className="text-3xl font-serif font-bold text-slate-primary mb-2">Clinical Logs</h2>
-                  <p className="text-stone-500">Reviewing health data for {selectedPatient.name}.</p>
+                  <h2 className="text-3xl font-serif font-bold text-slate-primary mb-2">Clinical Plan</h2>
+                  <p className="text-stone-500">Comprehensive clinical review for {selectedPatient.name}.</p>
                 </section>
-                <Card className="p-8">
-                  <HealthLogger elderlyId={selectedPatientId || ''} />
-                </Card>
+                
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                  <div className="space-y-6">
+                    <h3 className="text-xl font-serif font-bold text-slate-primary">Medication Regimen</h3>
+                    <MedicationTracker elderlyId={selectedPatientId || ''} />
+                  </div>
+                  <div className="space-y-6">
+                    <h3 className="text-xl font-serif font-bold text-slate-primary">Clinical Logs</h3>
+                    <Card className="p-6">
+                      <HealthLogger elderlyId={selectedPatientId || ''} />
+                    </Card>
+                  </div>
+                </div>
               </motion.div>
             )}
 
-            {activeTab === 'meds' && selectedPatient && (
+            {activeTab === 'knowledge' && (
               <motion.div
-                key="meds"
+                key="knowledge"
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: -20 }}
                 className="space-y-8"
               >
                 <section>
-                  <h2 className="text-3xl font-serif font-bold text-slate-primary mb-2">Medication Regimen</h2>
-                  <p className="text-stone-500">Active prescriptions and adherence for {selectedPatient.name}.</p>
+                  <h2 className="text-3xl font-serif font-bold text-slate-primary mb-2">Clinical Hub</h2>
+                  <p className="text-stone-500">Advanced medical resources and geriatric care research.</p>
                 </section>
-                <MedicationTracker elderlyId={selectedPatientId || ''} />
+
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  {[
+                    { title: 'Geriatric Pharmacology', desc: 'Latest research on medication management for the elderly.', icon: Pill },
+                    { title: 'Cognitive Assessment', desc: 'Standardized tools and protocols for dementia screening.', icon: Brain },
+                    { title: 'Palliative Care Protocols', desc: 'Best practices for end-of-life care and comfort.', icon: Heart },
+                    { title: 'Telehealth Best Practices', desc: 'Optimizing remote consultations for senior patients.', icon: Activity },
+                  ].map((resource) => (
+                    <Card key={resource.title} className="p-6 hover:shadow-lg transition-all border-stone-100 group cursor-pointer">
+                      <div className="flex gap-4">
+                        <div className="w-12 h-12 rounded-2xl bg-emerald-50 text-emerald-600 flex items-center justify-center shrink-0 group-hover:scale-110 transition-transform">
+                          <resource.icon size={24} />
+                        </div>
+                        <div className="space-y-1">
+                          <h3 className="text-base font-bold text-slate-primary">{resource.title}</h3>
+                          <p className="text-xs text-stone-500 leading-relaxed">{resource.desc}</p>
+                          <Button variant="ghost" size="sm" className="p-0 h-auto text-emerald-600 hover:bg-transparent mt-2">
+                            Access Resource →
+                          </Button>
+                        </div>
+                      </div>
+                    </Card>
+                  ))}
+                </div>
+              </motion.div>
+            )}
+
+            {activeTab === 'empathy' && (
+              <motion.div
+                key="empathy"
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -20 }}
+                className="space-y-8"
+              >
+                <section>
+                  <h2 className="text-3xl font-serif font-bold text-slate-primary mb-2">Empathy Lab</h2>
+                  <p className="text-stone-500">Refine your communication skills with AI-powered empathy analysis.</p>
+                </section>
+
+                <Card className="p-8 bg-white border-stone-100 shadow-sm space-y-6">
+                  <div className="space-y-4">
+                    <p className="text-sm text-stone-600 leading-relaxed">
+                      The Empathy Lab helps you practice responding to sensitive patient or caregiver concerns. 
+                      Use the floating AI assistant in the bottom right to access the full Empathy Lab analysis tool.
+                    </p>
+                    <div className="p-6 bg-stone-50 rounded-2xl border border-stone-100 italic text-stone-500 text-sm">
+                      "Doctor, I'm worried that my father isn't eating enough, but he gets angry when I bring it up."
+                    </div>
+                    <Button 
+                      onClick={() => {
+                        // In a real app, we'd trigger the floating assistant's empathy mode
+                        window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
+                      }}
+                      className="bg-emerald-600 hover:bg-emerald-700"
+                    >
+                      Open Empathy Lab in Assistant
+                    </Button>
+                  </div>
+                </Card>
               </motion.div>
             )}
 

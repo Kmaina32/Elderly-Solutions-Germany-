@@ -68,10 +68,25 @@ export function Services({ user }: { user: any }) {
     { id: 'transport', label: 'Transport', icon: Truck, description: 'Medical and daily transportation' },
     { id: 'healthcare', label: 'Healthcare', icon: HeartPulse, description: 'Professional medical assistance' },
     { id: 'home-help', label: 'Home Help', icon: Home, description: 'Daily chores and home maintenance' },
+    { id: 'wellness', label: 'Wellness', icon: Activity, description: 'Physical and mental well-being' },
+    { id: 'nutrition', label: 'Nutrition', icon: ShoppingBag, description: 'Meal prep and nutritional guidance' },
   ];
 
   const isCaregiver = user?.role === 'caregiver';
   const isProfessional = user?.role === 'professional';
+
+  const featuredServices = [
+    { id: 'f1', title: 'Medical Transport', description: 'Safe and reliable transportation to medical appointments.', category: 'transport', price: 45, verified: true },
+    { id: 'f2', title: 'Home Nursing', description: 'Professional nursing care in the comfort of your home.', category: 'healthcare', price: 85, verified: true },
+    { id: 'f3', title: 'Meal Delivery', description: 'Nutritious, chef-prepared meals delivered to your door.', category: 'nutrition', price: 15, verified: true },
+    { id: 'f4', title: 'Companion Care', description: 'Friendly companionship and assistance with daily activities.', category: 'home-help', price: 30, verified: true },
+    { id: 'f5', title: 'Physical Therapy', description: 'Personalized rehabilitation and mobility exercises.', category: 'wellness', price: 75, verified: true },
+    { id: 'f6', title: 'Grocery Shopping', description: 'Weekly grocery shopping and pantry stocking services.', category: 'nutrition', price: 25, verified: true },
+    { id: 'f7', title: 'Housekeeping', description: 'Light cleaning, laundry, and home organization.', category: 'home-help', price: 35, verified: true },
+    { id: 'f8', title: 'Medication Management', description: 'Professional oversight of medication schedules and refills.', category: 'healthcare', price: 50, verified: true },
+  ];
+
+  const displayServices = services.length > 0 ? services : featuredServices.filter(s => activeCategory === 'all' || s.category === activeCategory);
 
   return (
     <Layout userRole={user?.role}>
@@ -164,8 +179,8 @@ export function Services({ user }: { user: any }) {
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             <AnimatePresence mode="popLayout">
-              {services.length > 0 ? (
-                services.map((service) => (
+              {displayServices.length > 0 ? (
+                displayServices.map((service) => (
                   <motion.div
                     key={service.id}
                     layout

@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
-import { Home, Users, ShoppingBag, ShieldAlert, LogOut, PhoneCall, Menu, X, CheckCircle, LayoutGrid, Activity, Calendar, Heart, ShieldCheck, ChevronDown, HelpCircle, LifeBuoy, ClipboardList, Bot } from 'lucide-react';
+import { Home, Users, ShoppingBag, ShieldAlert, LogOut, PhoneCall, Menu, X, CheckCircle, LayoutGrid, Activity, Calendar, Heart, ShieldCheck, ChevronDown, HelpCircle, LifeBuoy, ClipboardList, Bot, Search, Stethoscope } from 'lucide-react';
 import { auth } from '../firebase';
 import { signOut } from 'firebase/auth';
 import { cn } from '../utils/cn';
@@ -9,6 +9,8 @@ import { Button } from './Button';
 import { motion, AnimatePresence } from 'motion/react';
 import { useAccessibility } from '../contexts/AccessibilityContext';
 import { Type } from 'lucide-react';
+
+import { FloatingAIAssistant } from './FloatingAIAssistant';
 
 interface LayoutProps {
   children: React.ReactNode;
@@ -33,10 +35,10 @@ export function Layout({ children, userRole }: LayoutProps) {
     { label: 'Home', path: '/home', icon: Home },
     { label: 'Social', path: '/social', icon: Users },
     { label: 'Services', path: '/services', icon: ShoppingBag },
-    { label: 'AI', path: '/ai-assistant', icon: Bot },
   ];
 
   if (userRole === 'caregiver') {
+    bottomNavItems[1] = { label: 'Patients', path: '/social', icon: Users };
     bottomNavItems[2] = { label: 'Care Plan', path: '/services', icon: ClipboardList };
   } else if (userRole === 'professional') {
     bottomNavItems[1] = { label: 'Patients', path: '/social', icon: Users };
@@ -44,9 +46,25 @@ export function Layout({ children, userRole }: LayoutProps) {
   }
 
   const menuItems = [
-    { label: 'AI Assistant', path: '/ai-assistant', icon: Bot, desc: 'Support' },
     { label: 'Profile', path: '/profile', icon: CheckCircle, desc: 'Account' },
   ];
+
+  if (userRole === 'caregiver') {
+    menuItems.push(
+      { label: 'Care Services', path: '/services', icon: ShoppingBag, desc: 'Book' },
+      { label: 'Knowledge Hub', path: '/home?tab=knowledge', icon: Search, desc: 'Resources' }
+    );
+  } else if (userRole === 'professional') {
+    menuItems.push(
+      { label: 'Clinical Hub', path: '/home?tab=knowledge', icon: Stethoscope, desc: 'Research' },
+      { label: 'Empathy Lab', path: '/home?tab=empathy', icon: Heart, desc: 'Training' }
+    );
+  } else if (userRole === 'elderly') {
+    menuItems.push(
+      { label: 'Knowledge Hub', path: '/home?tab=knowledge', icon: Search, desc: 'Guides' },
+      { label: 'Community', path: '/social', icon: Users, desc: 'Events' }
+    );
+  }
 
   if (userRole === 'admin') {
     menuItems.push({ label: 'Administration', path: '/admin', icon: ShieldAlert, desc: 'Admin' });
@@ -54,8 +72,8 @@ export function Layout({ children, userRole }: LayoutProps) {
 
   const BrandName = ({ isMobile = false }) => (
     <button 
-      onClick={() => setIsSolutionsOpen(!isSolutionsOpen)}
-      className="flex flex-col group text-left"
+      onClick={() => !isMobile && setIsSolutionsOpen(!isSolutionsOpen)}
+      className={cn("flex flex-col group text-left", isMobile ? "cursor-default" : "cursor-pointer")}
     >
       <div className="flex items-center gap-2">
         <span className={cn(
@@ -64,10 +82,12 @@ export function Layout({ children, userRole }: LayoutProps) {
         )}>
           Elderly solutions
         </span>
-        <ChevronDown 
-          size={isMobile ? 14 : 16} 
-          className={cn("text-stone-400 transition-transform", isSolutionsOpen && "rotate-180")} 
-        />
+        {!isMobile && (
+          <ChevronDown 
+            size={16} 
+            className={cn("text-stone-400 transition-transform", isSolutionsOpen && "rotate-180")} 
+          />
+        )}
       </div>
       <span className={cn(
         "font-sans font-bold uppercase tracking-[0.3em] text-stone-400",
@@ -155,18 +175,19 @@ export function Layout({ children, userRole }: LayoutProps) {
           className="fixed top-0 left-0 lg:left-64 right-0 h-[2px] bg-brand-accent z-[60]"
         />
 
-        {/* Editorial Header (Mobile Only) */}
+        {/* Editorial Header (Mobile Only - Simplified) */}
         <header className="lg:hidden bg-white border-b border-stone-200 px-6 py-3 sticky top-0 z-50 shadow-sm">
           <div className="max-w-5xl mx-auto flex items-center justify-between relative">
             <BrandName isMobile />
             
-            <button 
-              onClick={() => setIsMenuOpen(!isMenuOpen)}
-              className="p-2 text-brand-primary hover:bg-stone-100 rounded-lg transition-colors"
-              aria-label="Toggle Menu"
-            >
-              {isMenuOpen ? <X size={24} /> : <Menu size={24} />}
-            </button>
+            <div className="flex items-center gap-2">
+              <button 
+                onClick={() => setIsAccessibilityOpen(true)}
+                className="p-2 text-stone-400 hover:bg-stone-100 rounded-lg transition-colors"
+              >
+                <Type size={20} />
+              </button>
+            </div>
           </div>
         </header>
 
@@ -263,18 +284,32 @@ export function Layout({ children, userRole }: LayoutProps) {
 
             <nav className="flex-1 overflow-y-auto px-6 py-8">
               <div className="grid grid-cols-2 gap-3">
-                {/* Care Ecosystem Items */}
-                {[
-                  { label: 'Health', icon: Activity, color: 'text-emerald-600', bg: 'bg-emerald-50' },
-                  { label: 'Events', icon: Calendar, color: 'text-blue-600', bg: 'bg-blue-50' },
-                  { label: 'Safety', icon: ShieldCheck, color: 'text-orange-600', bg: 'bg-orange-50' },
-                  { label: 'Market', icon: ShoppingBag, color: 'text-amber-600', bg: 'bg-amber-50' },
-                ].map((sol, i) => (
+                {/* Role-Specific Quick Actions */}
+                {(userRole === 'caregiver' ? [
+                  { label: 'Knowledge', icon: Search, color: 'text-blue-600', bg: 'bg-blue-50', path: '/home?tab=knowledge' },
+                  { label: 'Services', icon: ShoppingBag, color: 'text-rose-600', bg: 'bg-rose-50', path: '/services' },
+                  { label: 'Patients', icon: Users, color: 'text-emerald-600', bg: 'bg-emerald-50', path: '/social' },
+                  { label: 'Care Plan', icon: ClipboardList, color: 'text-amber-600', bg: 'bg-amber-50', path: '/home?tab=care-plan' },
+                ] : userRole === 'professional' ? [
+                  { label: 'Clinical Hub', icon: Stethoscope, color: 'text-emerald-600', bg: 'bg-emerald-50', path: '/home?tab=knowledge' },
+                  { label: 'Empathy Lab', icon: Heart, color: 'text-rose-600', bg: 'bg-rose-50', path: '/home?tab=empathy' },
+                  { label: 'Patients', icon: Users, color: 'text-blue-600', bg: 'bg-blue-50', path: '/social' },
+                  { label: 'Consults', icon: Calendar, color: 'text-amber-600', bg: 'bg-amber-50', path: '/services' },
+                ] : [
+                  { label: 'Knowledge', icon: Search, color: 'text-blue-600', bg: 'bg-blue-50', path: '/home?tab=knowledge' },
+                  { label: 'Services', icon: ShoppingBag, color: 'text-amber-600', bg: 'bg-amber-50', path: '/services' },
+                  { label: 'Community', icon: Users, color: 'text-emerald-600', bg: 'bg-emerald-50', path: '/social' },
+                  { label: 'Care Plan', icon: ClipboardList, color: 'text-rose-600', bg: 'bg-rose-50', path: '/home?tab=care-plan' },
+                ]).map((sol, i) => (
                   <motion.button
                     key={sol.label}
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ delay: i * 0.05 }}
+                    onClick={() => {
+                      navigate(sol.path);
+                      setIsMenuOpen(false);
+                    }}
                     className="flex flex-col items-center justify-center p-4 rounded-2xl bg-stone-50 border border-stone-100 gap-2 active:scale-95 transition-transform"
                   >
                     <div className={cn("w-10 h-10 rounded-xl flex items-center justify-center", sol.bg, sol.color)}>
@@ -409,11 +444,14 @@ export function Layout({ children, userRole }: LayoutProps) {
       {/* Floating Assistance Button (FAB) */}
       <button
         onClick={() => setIsHelpOpen(true)}
-        className="fixed bottom-24 lg:bottom-12 right-6 lg:right-12 w-14 h-14 bg-red-600 text-white rounded-full shadow-2xl flex items-center justify-center z-[60] active:scale-95 transition-transform hover:bg-red-700"
+        className="fixed bottom-24 lg:bottom-28 right-6 lg:right-8 w-14 h-14 bg-red-600 text-white rounded-full shadow-2xl flex items-center justify-center z-[60] active:scale-95 transition-transform hover:bg-red-700"
         aria-label="Get Assistance"
       >
         <LifeBuoy size={28} className="animate-pulse" />
       </button>
+
+      {/* Floating AI Assistant */}
+      <FloatingAIAssistant user={userRole} />
 
       {/* Editorial Footer */}
       <footer className="hidden lg:block bg-brand-primary text-white/60 py-12 px-8 border-t border-stone-200 ml-0">

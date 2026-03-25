@@ -2,9 +2,9 @@ import React, { useState, useEffect } from 'react';
 import { Layout } from '../../components/Layout';
 import { Card } from '../../components/Card';
 import { Button } from '../../components/Button';
-import { Heart, Users, Activity, Calendar, AlertCircle, MessageSquare, ArrowRight, ClipboardList, ShieldCheck, Pill, Search, ChevronRight, UserPlus, UserCircle } from 'lucide-react';
+import { Heart, Users, Activity, Calendar, AlertCircle, MessageSquare, ArrowRight, ClipboardList, ShieldCheck, Pill, Search, ChevronRight, UserPlus, UserCircle, Brain, Bot } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import { cn } from '../../utils/cn';
 import { HealthLogger } from '../../components/HealthLogger';
 import { MedicationTracker } from '../../components/MedicationTracker';
@@ -15,7 +15,23 @@ import { doc, getDoc, collection, query, where, onSnapshot } from 'firebase/fire
 
 export function CaregiverHome({ user }: { user: any }) {
   const navigate = useNavigate();
-  const [activeTab, setActiveTab] = useState<'dashboard' | 'health' | 'meds' | 'connect'>('dashboard');
+  const [searchParams, setSearchParams] = useSearchParams();
+  const tabParam = searchParams.get('tab');
+  
+  const [activeTab, setActiveTab] = useState<'dashboard' | 'care-plan' | 'knowledge' | 'connect'>(
+    (tabParam as any) || 'dashboard'
+  );
+
+  useEffect(() => {
+    if (tabParam && ['dashboard', 'care-plan', 'knowledge', 'connect'].includes(tabParam)) {
+      setActiveTab(tabParam as any);
+    }
+  }, [tabParam]);
+
+  const handleTabChange = (tab: string) => {
+    setActiveTab(tab as any);
+    setSearchParams({ tab });
+  };
   const [patients, setPatients] = useState<any[]>([]);
   const [selectedPatientId, setSelectedPatientId] = useState<string | null>(null);
   const [selectedPatient, setSelectedPatient] = useState<any>(null);
@@ -62,8 +78,8 @@ export function CaregiverHome({ user }: { user: any }) {
 
   const tabs = [
     { id: 'dashboard', label: 'Dashboard', icon: Activity },
-    { id: 'health', label: 'Patient Logs', icon: Heart },
-    { id: 'meds', label: 'Medications', icon: Pill },
+    { id: 'care-plan', label: 'Care Plan', icon: ClipboardList },
+    { id: 'knowledge', label: 'Knowledge Hub', icon: Search },
     { id: 'connect', label: 'Connect Patient', icon: UserPlus },
   ];
 
@@ -87,7 +103,7 @@ export function CaregiverHome({ user }: { user: any }) {
               {tabs.map((tab) => (
                 <button
                   key={tab.id}
-                  onClick={() => setActiveTab(tab.id as any)}
+                  onClick={() => handleTabChange(tab.id)}
                   className={cn(
                     "w-full flex items-center gap-4 p-4 rounded-2xl transition-all group text-left",
                     activeTab === tab.id 
@@ -202,24 +218,43 @@ export function CaregiverHome({ user }: { user: any }) {
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: -20 }}
-                className="space-y-8"
+                className="space-y-6"
               >
                 <section>
-                  <span className="text-[10px] font-sans font-bold uppercase tracking-[0.3em] text-blue-600 mb-2 block">
-                    Caregiver Dashboard
-                  </span>
-                  <h2 className="text-3xl lg:text-4xl font-serif font-bold text-slate-primary leading-tight mb-4">
+                  <h2 className="text-2xl lg:text-3xl font-serif font-bold text-slate-primary leading-tight">
                     Hello, {user?.name?.split(' ')[0] || 'Caregiver'}.
                   </h2>
-                  <p className="text-lg text-stone-500 font-sans leading-relaxed max-w-2xl">
+                  <p className="text-sm text-stone-500 mt-1">
                     {selectedPatient 
-                      ? `You are managing care for ${selectedPatient.name}. Here is the latest status and pending tasks.`
-                      : "You haven't connected with a patient yet. Use the 'Connect Patient' tab to get started."}
+                      ? `Managing care for ${selectedPatient.name}.`
+                      : "Connect with a patient to start managing care."}
                   </p>
                 </section>
 
-                {selectedPatient && (
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                {/* Mobile Resource Buttons - Side by Side */}
+                <div className="lg:hidden grid grid-cols-2 gap-3">
+                  <button 
+                    onClick={() => navigate('/ai-assistant?mode=knowledge')}
+                    className="flex flex-col items-center gap-2 p-4 rounded-2xl bg-white border border-stone-100 shadow-sm active:scale-95 transition-all"
+                  >
+                    <div className="w-10 h-10 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center">
+                      <Search size={20} />
+                    </div>
+                    <span className="text-[10px] font-bold uppercase tracking-widest text-slate-primary">Knowledge</span>
+                  </button>
+                  <button 
+                    onClick={() => navigate('/services')}
+                    className="flex flex-col items-center gap-2 p-4 rounded-2xl bg-white border border-stone-100 shadow-sm active:scale-95 transition-all"
+                  >
+                    <div className="w-10 h-10 rounded-xl bg-rose-50 text-rose-600 flex items-center justify-center">
+                      <ClipboardList size={20} />
+                    </div>
+                    <span className="text-[10px] font-bold uppercase tracking-widest text-slate-primary">Services</span>
+                  </button>
+                </div>
+
+                {selectedPatient ? (
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <Card className="p-6 space-y-4 border-2 border-transparent hover:border-blue-600/20 transition-all">
                       <div className="flex items-center justify-between">
                         <div className="w-12 h-12 rounded-2xl bg-blue-50 text-blue-600 flex items-center justify-center">
@@ -234,7 +269,7 @@ export function CaregiverHome({ user }: { user: any }) {
                       <Button 
                         variant="outline" 
                         className="w-full border-stone-100 hover:border-blue-600 hover:text-blue-600"
-                        onClick={() => setActiveTab('health')}
+                        onClick={() => setActiveTab('care-plan')}
                       >
                         Manage Logs
                       </Button>
@@ -254,13 +289,13 @@ export function CaregiverHome({ user }: { user: any }) {
                       <Button 
                         variant="outline" 
                         className="w-full border-stone-100 hover:border-terracotta hover:text-terracotta"
-                        onClick={() => setActiveTab('meds')}
+                        onClick={() => setActiveTab('care-plan')}
                       >
                         Check Schedule
                       </Button>
                     </Card>
                   </div>
-                )}
+                ) : null}
 
                 {patients.length === 0 && (
                   <Card className="p-12 text-center space-y-6 bg-stone-50 border-2 border-dashed border-stone-200">
@@ -284,37 +319,91 @@ export function CaregiverHome({ user }: { user: any }) {
               </motion.div>
             )}
 
-            {activeTab === 'health' && selectedPatient && (
+            {activeTab === 'care-plan' && selectedPatient && (
               <motion.div
-                key="health"
+                key="care-plan"
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: -20 }}
                 className="space-y-8"
               >
                 <section>
-                  <h2 className="text-3xl font-serif font-bold text-slate-primary mb-2">Patient Health Logs</h2>
-                  <p className="text-stone-500">Record vitals or mood on behalf of {selectedPatient.name}.</p>
+                  <h2 className="text-3xl font-serif font-bold text-slate-primary mb-2">Care Plan</h2>
+                  <p className="text-stone-500">Comprehensive care management for {selectedPatient.name}.</p>
                 </section>
-                <Card className="p-8">
-                  <HealthLogger elderlyId={selectedPatientId || ''} />
-                </Card>
+                
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                  <div className="space-y-6">
+                    <h3 className="text-xl font-serif font-bold text-slate-primary">Medications</h3>
+                    <MedicationTracker elderlyId={selectedPatientId || ''} />
+                  </div>
+                  <div className="space-y-6">
+                    <h3 className="text-xl font-serif font-bold text-slate-primary">Recent Vitals</h3>
+                    <Card className="p-6">
+                      <HealthLogger elderlyId={selectedPatientId || ''} />
+                    </Card>
+                  </div>
+                </div>
               </motion.div>
             )}
 
-            {activeTab === 'meds' && selectedPatient && (
+            {activeTab === 'knowledge' && (
               <motion.div
-                key="meds"
+                key="knowledge"
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: -20 }}
                 className="space-y-8"
               >
                 <section>
-                  <h2 className="text-3xl font-serif font-bold text-slate-primary mb-2">Medication Status</h2>
-                  <p className="text-stone-500">Monitor adherence and confirm doses for {selectedPatient.name}.</p>
+                  <h2 className="text-3xl font-serif font-bold text-slate-primary mb-2">Knowledge Hub</h2>
+                  <p className="text-stone-500">Curated resources and AI-powered care insights.</p>
                 </section>
-                <MedicationTracker elderlyId={selectedPatientId || ''} />
+
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  {[
+                    { title: 'Dementia Care Guide', desc: 'Practical tips for daily care and communication.', icon: Brain },
+                    { title: 'Nutrition for Seniors', desc: 'Healthy meal planning and dietary considerations.', icon: Heart },
+                    { title: 'Mobility & Safety', desc: 'Preventing falls and creating a safe home environment.', icon: ShieldCheck },
+                    { title: 'Emotional Well-being', desc: 'Managing caregiver stress and patient mood.', icon: Activity },
+                  ].map((resource) => (
+                    <Card key={resource.title} className="p-6 hover:shadow-lg transition-all border-stone-100 group cursor-pointer">
+                      <div className="flex gap-4">
+                        <div className="w-12 h-12 rounded-2xl bg-brand-primary/5 text-brand-primary flex items-center justify-center shrink-0 group-hover:scale-110 transition-transform">
+                          <resource.icon size={24} />
+                        </div>
+                        <div className="space-y-1">
+                          <h3 className="text-base font-bold text-slate-primary">{resource.title}</h3>
+                          <p className="text-xs text-stone-500 leading-relaxed">{resource.desc}</p>
+                          <Button variant="ghost" size="sm" className="p-0 h-auto text-brand-primary hover:bg-transparent mt-2">
+                            Read Article →
+                          </Button>
+                        </div>
+                      </div>
+                    </Card>
+                  ))}
+                </div>
+
+                <Card className="p-8 bg-brand-primary text-white overflow-hidden relative">
+                  <div className="relative z-10 space-y-4 max-w-lg">
+                    <h3 className="text-2xl font-serif font-bold">Need specific advice?</h3>
+                    <p className="text-white/80 text-sm">
+                      Our AI Care Companion can help you find answers to specific caregiving questions instantly.
+                    </p>
+                    <Button 
+                      variant="outline" 
+                      className="bg-white/10 border-white/20 text-white hover:bg-white/20"
+                      onClick={() => {
+                        // This will trigger the floating assistant if we had a way to communicate, 
+                        // for now let's just show a message or redirect
+                        window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
+                      }}
+                    >
+                      Ask AI Companion
+                    </Button>
+                  </div>
+                  <Bot size={120} className="absolute -right-8 -bottom-8 text-white/10 rotate-12" />
+                </Card>
               </motion.div>
             )}
 

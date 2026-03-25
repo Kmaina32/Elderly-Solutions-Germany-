@@ -1,10 +1,10 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Layout } from '../../components/Layout';
 import { Card } from '../../components/Card';
 import { Button } from '../../components/Button';
-import { Phone, Users, ShoppingBag, Calendar, AlertCircle, MessageSquare, ArrowRight, Heart, Activity, Pill, Clock, ShieldCheck, ChevronRight } from 'lucide-react';
+import { Phone, Users, ShoppingBag, Calendar, AlertCircle, MessageSquare, ArrowRight, Heart, Activity, Pill, Clock, ShieldCheck, ChevronRight, ClipboardList, Search } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import { cn } from '../../utils/cn';
 import { HealthLogger } from '../../components/HealthLogger';
 import { MedicationTracker } from '../../components/MedicationTracker';
@@ -13,12 +13,28 @@ import { auth } from '../../firebase';
 
 export function ElderlyHome({ user }: { user: any }) {
   const navigate = useNavigate();
-  const [activeTab, setActiveTab] = useState<'overview' | 'health' | 'meds' | 'circle'>('overview');
+  const [searchParams, setSearchParams] = useSearchParams();
+  const tabParam = searchParams.get('tab');
+  
+  const [activeTab, setActiveTab] = useState<'overview' | 'care-plan' | 'knowledge' | 'circle'>(
+    (tabParam as any) || 'overview'
+  );
+
+  useEffect(() => {
+    if (tabParam && ['overview', 'care-plan', 'knowledge', 'circle'].includes(tabParam)) {
+      setActiveTab(tabParam as any);
+    }
+  }, [tabParam]);
+
+  const handleTabChange = (tab: string) => {
+    setActiveTab(tab as any);
+    setSearchParams({ tab });
+  };
 
   const tabs = [
     { id: 'overview', label: 'Overview', icon: Activity },
-    { id: 'health', label: 'Health Logs', icon: Heart },
-    { id: 'meds', label: 'Medications', icon: Pill },
+    { id: 'care-plan', label: 'Care Plan', icon: ClipboardList },
+    { id: 'knowledge', label: 'Knowledge Hub', icon: Search },
     { id: 'circle', label: 'Care Circle', icon: Users },
   ];
 
@@ -42,7 +58,7 @@ export function ElderlyHome({ user }: { user: any }) {
               {tabs.map((tab) => (
                 <button
                   key={tab.id}
-                  onClick={() => setActiveTab(tab.id as any)}
+                  onClick={() => handleTabChange(tab.id)}
                   className={cn(
                     "w-full flex items-center gap-4 p-4 rounded-2xl transition-all group text-left",
                     activeTab === tab.id 
@@ -120,21 +136,40 @@ export function ElderlyHome({ user }: { user: any }) {
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: -20 }}
-                className="space-y-8"
+                className="space-y-6"
               >
                 <section>
-                  <span className="text-[10px] font-sans font-bold uppercase tracking-[0.3em] text-terracotta mb-2 block">
-                    Daily Overview
-                  </span>
-                  <h2 className="text-3xl lg:text-4xl font-serif font-bold text-slate-primary leading-tight mb-4">
+                  <h2 className="text-2xl lg:text-3xl font-serif font-bold text-slate-primary leading-tight">
                     Good morning, {user?.name?.split(' ')[0] || 'Friend'}.
                   </h2>
-                  <p className="text-lg text-stone-500 font-sans leading-relaxed max-w-2xl">
-                    Your schedule is clear for the next few hours. Here are your recommended actions for a balanced day.
+                  <p className="text-sm text-stone-500 mt-1">
+                    Your schedule is clear. Here are your recommended actions.
                   </p>
                 </section>
 
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                {/* Mobile Quick Access - Side by Side */}
+                <div className="lg:hidden grid grid-cols-2 gap-3">
+                  <button 
+                    onClick={() => setActiveTab('knowledge')}
+                    className="flex flex-col items-center gap-2 p-4 rounded-2xl bg-white border border-stone-100 shadow-sm active:scale-95 transition-all"
+                  >
+                    <div className="w-10 h-10 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center">
+                      <Search size={20} />
+                    </div>
+                    <span className="text-[10px] font-bold uppercase tracking-widest text-slate-primary">Knowledge</span>
+                  </button>
+                  <button 
+                    onClick={() => navigate('/services')}
+                    className="flex flex-col items-center gap-2 p-4 rounded-2xl bg-white border border-stone-100 shadow-sm active:scale-95 transition-all"
+                  >
+                    <div className="w-10 h-10 rounded-xl bg-amber-50 text-amber-600 flex items-center justify-center">
+                      <ShoppingBag size={20} />
+                    </div>
+                    <span className="text-[10px] font-bold uppercase tracking-widest text-slate-primary">Services</span>
+                  </button>
+                </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <Card className="p-6 space-y-4 border-2 border-transparent hover:border-terracotta/20 transition-all">
                     <div className="flex items-center justify-between">
                       <div className="w-12 h-12 rounded-2xl bg-terracotta/5 text-terracotta flex items-center justify-center">
@@ -149,7 +184,7 @@ export function ElderlyHome({ user }: { user: any }) {
                     <Button 
                       variant="outline" 
                       className="w-full border-stone-100 hover:border-terracotta hover:text-terracotta"
-                      onClick={() => setActiveTab('health')}
+                      onClick={() => setActiveTab('care-plan')}
                     >
                       Log Vitals
                     </Button>
@@ -169,7 +204,7 @@ export function ElderlyHome({ user }: { user: any }) {
                     <Button 
                       variant="outline" 
                       className="w-full border-stone-100 hover:border-sage-accent hover:text-sage-accent"
-                      onClick={() => setActiveTab('meds')}
+                      onClick={() => setActiveTab('care-plan')}
                     >
                       View Schedule
                     </Button>
@@ -207,37 +242,70 @@ export function ElderlyHome({ user }: { user: any }) {
               </motion.div>
             )}
 
-            {activeTab === 'health' && (
+            {activeTab === 'care-plan' && (
               <motion.div
-                key="health"
+                key="care-plan"
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: -20 }}
                 className="space-y-8"
               >
                 <section>
-                  <h2 className="text-3xl font-serif font-bold text-slate-primary mb-2">Health & Vitals</h2>
-                  <p className="text-stone-500">Track your daily wellness and share with your care team.</p>
+                  <h2 className="text-3xl font-serif font-bold text-slate-primary mb-2">My Care Plan</h2>
+                  <p className="text-stone-500">Manage your health logs and medications in one place.</p>
                 </section>
-                <Card className="p-8">
-                  <HealthLogger elderlyId={auth.currentUser?.uid || ''} />
-                </Card>
+                
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                  <div className="space-y-6">
+                    <h3 className="text-xl font-serif font-bold text-slate-primary">Medications</h3>
+                    <MedicationTracker elderlyId={auth.currentUser?.uid || ''} />
+                  </div>
+                  <div className="space-y-6">
+                    <h3 className="text-xl font-serif font-bold text-slate-primary">Health Logs</h3>
+                    <Card className="p-6">
+                      <HealthLogger elderlyId={auth.currentUser?.uid || ''} />
+                    </Card>
+                  </div>
+                </div>
               </motion.div>
             )}
 
-            {activeTab === 'meds' && (
+            {activeTab === 'knowledge' && (
               <motion.div
-                key="meds"
+                key="knowledge"
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: -20 }}
                 className="space-y-8"
               >
                 <section>
-                  <h2 className="text-3xl font-serif font-bold text-slate-primary mb-2">Medications</h2>
-                  <p className="text-stone-500">Your active prescriptions and reminders.</p>
+                  <h2 className="text-3xl font-serif font-bold text-slate-primary mb-2">Knowledge Hub</h2>
+                  <p className="text-stone-500">Helpful guides and resources for healthy aging.</p>
                 </section>
-                <MedicationTracker elderlyId={auth.currentUser?.uid || ''} />
+
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  {[
+                    { title: 'Healthy Eating for Seniors', desc: 'Nutritious recipes and dietary tips for maintaining energy.', icon: Heart },
+                    { title: 'Stay Active at Home', desc: 'Simple exercises to improve balance and strength.', icon: Activity },
+                    { title: 'Digital Literacy 101', desc: 'Learn how to use technology to stay connected with family.', icon: MessageSquare },
+                    { title: 'Sleep Better Tonight', desc: 'Tips for improving sleep quality and managing insomnia.', icon: Clock },
+                  ].map((resource) => (
+                    <Card key={resource.title} className="p-6 hover:shadow-lg transition-all border-stone-100 group cursor-pointer">
+                      <div className="flex gap-4">
+                        <div className="w-12 h-12 rounded-2xl bg-stone-50 text-slate-primary flex items-center justify-center shrink-0 group-hover:scale-110 transition-transform">
+                          <resource.icon size={24} />
+                        </div>
+                        <div className="space-y-1">
+                          <h3 className="text-base font-bold text-slate-primary">{resource.title}</h3>
+                          <p className="text-xs text-stone-500 leading-relaxed">{resource.desc}</p>
+                          <Button variant="ghost" size="sm" className="p-0 h-auto text-terracotta hover:bg-transparent mt-2">
+                            Read Guide →
+                          </Button>
+                        </div>
+                      </div>
+                    </Card>
+                  ))}
+                </div>
               </motion.div>
             )}
 
