@@ -18,8 +18,7 @@ import { Onboarding } from './pages/Onboarding';
 import { Social } from './pages/Social';
 import { Services } from './pages/Services';
 import { Admin } from './pages/admin/AdminPage';
-import { KnowledgeHub } from './pages/KnowledgeHub';
-import { EmpathyLab } from './pages/EmpathyLab';
+import { AIAssistant } from './pages/AIAssistant';
 import Profile from './pages/Profile';
 import { LoadingScreen } from './components/LoadingScreen';
 import { MedicationReminderManager } from './components/MedicationReminderManager';
@@ -83,8 +82,7 @@ export default function App() {
           <Route path="/home" element={<Home user={profile} />} />
           <Route path="/social" element={<Social user={profile} />} />
           <Route path="/services" element={<Services user={profile} />} />
-          <Route path="/knowledge" element={<KnowledgeHub user={profile} />} />
-          <Route path="/empathy-lab" element={<EmpathyLab user={profile} />} />
+          <Route path="/ai-assistant" element={<AIAssistant user={profile} />} />
           <Route path="/profile" element={<Profile user={profile} />} />
           <Route path="/admin" element={<Admin user={profile} />} />
           <Route path="*" element={<Navigate to="/home" replace />} />

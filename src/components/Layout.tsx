@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
-import { Home, Users, ShoppingBag, ShieldAlert, LogOut, PhoneCall, Menu, X, CheckCircle, LayoutGrid, Activity, Calendar, Heart, ShieldCheck, ChevronDown, HelpCircle, LifeBuoy, ClipboardList } from 'lucide-react';
+import { Home, Users, ShoppingBag, ShieldAlert, LogOut, PhoneCall, Menu, X, CheckCircle, LayoutGrid, Activity, Calendar, Heart, ShieldCheck, ChevronDown, HelpCircle, LifeBuoy, ClipboardList, Bot } from 'lucide-react';
 import { auth } from '../firebase';
 import { signOut } from 'firebase/auth';
 import { cn } from '../utils/cn';
@@ -33,7 +33,7 @@ export function Layout({ children, userRole }: LayoutProps) {
     { label: 'Home', path: '/home', icon: Home },
     { label: 'Social', path: '/social', icon: Users },
     { label: 'Services', path: '/services', icon: ShoppingBag },
-    { label: 'AI', path: '/empathy-lab', icon: Heart },
+    { label: 'AI', path: '/ai-assistant', icon: Bot },
   ];
 
   if (userRole === 'caregiver') {
@@ -44,7 +44,7 @@ export function Layout({ children, userRole }: LayoutProps) {
   }
 
   const menuItems = [
-    { label: 'Knowledge Hub', path: '/knowledge', icon: HelpCircle, desc: 'Learn' },
+    { label: 'AI Assistant', path: '/ai-assistant', icon: Bot, desc: 'Support' },
     { label: 'Profile', path: '/profile', icon: CheckCircle, desc: 'Account' },
   ];
 
